@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+  <title>关于ACAT实验室</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* 确保至少占满视口高度 */
+      padding: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card-right {
+      background-color: #1e3a8a;
+      color: white;
+      border-radius: 12px;
+      padding: 40px;
+      width: 100%;
+      max-width: 520px; /* 稍宽一点，适配大字 */
+      text-align: left;
+      flex-shrink: 0; /* 防止被压缩 */
+    }
+
+    .card-right h2 {
+      font-size: 24px; /* 标题更大 */
+      margin-bottom: 24px;
+      font-weight: bold;
+    }
+
+    .card-right p {
+      line-height: 1.8;
+      margin-bottom: 24px;
+      font-size: 17px; /* 正文字体加大 */
+    }
+
+    .buttons-right {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .btn-go,
+    .btn-java,
+    .btn-frontend {
+      padding: 10px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 15px; /* 按钮文字也稍大 */
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .btn-go { background-color: #10b981; color: white; }
+    .btn-java { background-color: #3b82f6; color: white; }
+    .btn-frontend { background-color: #f59e0b; color: white; }
+
+    /* 版权信息：固定在底部 */
+    .footer {
+      text-align: center;
+      font-size: 15px; /* 版权字也稍大 */
+      color: #6b7280;
+      margin-top: auto; /* 推到最底部 */
+      padding-top: 20px;
+      width: 100%;
+    }
+
+    /* 手机端适配 */
+    @media (max-width: 600px) {
+      .card-right {
+        padding: 30px 20px;
+        max-width: 100%;
+      }
+
+      .card-right h2 {
+        font-size: 22px;
+      }
+
+      .card-right p {
+        font-size: 16px;
+      }
+
+      .buttons-right {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn-go,
+      .btn-java,
+      .btn-frontend {
+        width: 100%;
+        max-width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="card-right">
+  <h2>关于ACAT实验室</h2>
+  <p>
+    ACAT实验室，全称，计算机应用技术协会，隶属于西安邮电大学计算机学院，成立于2014年。实验室位处西区图书馆二楼A211教室，是一个集学习、交流、项目实战于一体的开放技术社区。
+  </p>
+  <p>
+    实验室聚焦现代 Web 开发技术体系，主要培养方向包括：<strong>后端 Go</strong>（高性能并发服务）、<strong>后端 Java</strong>（企业级应用开发）以及<strong>前端工程化</strong>（响应式界面与交互体验）。成员通过参与真实项目、技术分享、代码评审与团队协作，全面提升工程能力和创新思维。
+  </p>
+  <p>
+    无论你是零基础的新手，还是已有一定经验的开发者，只要热爱编程、愿意成长，ACAT 都欢迎你的加入！在这里，你不仅能掌握前沿技术，还能结识志同道合的伙伴，共同打造属于自己的技术作品。
+  </p>
+  <div class="buttons-right">
+    <a href="/tech/go" class="btn-go">后端Go</a>
+    <a href="/tech/java" class="btn-java">后端Java</a>
+    <a href="/tech/frontend" class="btn-frontend">前端</a>
+  </div>
+</div>
+<div class="back-button">
+  <a href="/index">返回首页</a>
+</div>
+<!-- 版权信息：始终在页面最下方 -->
+<div class="footer">
+  © ACAT实验室
+</div>
+</body>
+</html>

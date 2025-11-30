@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <title>纳新报名系统 - 登录</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 320px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #40a9ff;
+        }
+        .error {
+            color: #f5222d;
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+        .success {
+            color: #52c41a;
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            background: #52c41a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 9999;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="login-box">
+    <h2>登录</h2>
+    <input type="tel" id="phone" placeholder="请输入11位手机号" maxlength="11" />
+    <input type="password" id="password" placeholder="请输入密码" />
+    <button onclick="login()">登录</button>
+
+    <!-- 新增：操作链接 -->
+    <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 14px;">
+        <a href="/user/forgot" style="color: #1890ff; text-decoration: none;">忘记密码？</a>
+        <a href="/user/register" style="color: #1890ff; text-decoration: none;">没有账号？去注册</a>
+    </div>
+
+    <div id="message"></div>
+</div>
+
+<script>
+    function showToast(message, isSuccess = true) {
+        let toast = document.getElementById('js-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'js-toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = message;
+        toast.style.background = isSuccess ? '#52c41a' : '#f5222d';
+
+        // 触发动画
+        toast.classList.remove('show');
+        void toast.offsetWidth; // 强制重排
+        toast.classList.add('show');
+
+        // 1.5 秒后自动隐藏
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 1500);
+    }
+
+    async function login() {
+        const phone = document.getElementById('phone').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!phone || phone.length !== 11) {
+            showToast('请输入11位手机号', false);
+            return;
+        }
+        if (!password) {
+            showToast('请输入密码', false);
+            return;
+        }
+
+        try {
+            const res = await fetch('/user/login', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Phone: phone, Password: password })
+            });
+
+            let data;
+            try {
+                data = await res.json();
+            } catch (e) {
+                console.error('响应非JSON:', await res.text());
+                showToast('服务器异常，请稍后再试', false);
+                return;
+            }
+
+            if (data.status === 200) {
+                showToast('登录成功，跳转中...', true);
+                setTimeout(() => {
+                    window.location.href = '/user/center';
+                }, 1500);
+            } else {
+                showToast(data.msg || '登录失败', false);
+            }
+        } catch (err) {
+            console.error('网络请求失败:', err);
+            showToast('网络错误，请检查连接', false);
+        }
+    }
+
+    document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') login();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <title>ACAT 实验室纳新系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card-left {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 50px 40px; /* 上下更多内边距 → 更“长” */
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .card-left img {
+            width: 160px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .card-left h1 {
+            color: #1e3a8a;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .card-left .subtitle {
+            color: #4b5563;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            padding: 0 10px;
+        }
+
+        .buttons-left {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 260px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            padding: 13px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-blue {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-blue:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-white {
+            background-color: white;
+            color: #3b82f6;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-white:hover {
+            background-color: #f9fafb;
+        }
+
+        /* 版权信息：固定在底部 */
+        .footer {
+            text-align: center;
+            font-size: 15px;
+            color: #6b7280;
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .card-left {
+                padding: 40px 25px;
+            }
+            .card-left h1 {
+                font-size: 22px;
+            }
+            .card-left .subtitle {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="card-left">
+    <img src="/static/images/acat-logo.png" alt="ACAT Logo">
+    <h1>ACAT实验室纳新系统</h1>
+    <p class="subtitle">
+        加入我们，开启你的web开发之旅！在这里，代码不止是任务，更是创造的起点。
+    </p>
+    <div class="buttons-left">
+        <a href="/user/center" class="btn btn-blue">进入用户中心</a>
+        <a href="/schedule" class="btn btn-white">查看面试时段表</a>
+        <a href="/introduce" class="btn btn-blue">了解ACAT实验室</a>
+    </div>
+</div>
+
+<div class="footer">
+    © ACAT实验室
+</div>
+</body>
+</html>

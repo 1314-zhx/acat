@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ACAT.iml" filepath="$PROJECT_DIR$/.idea/ACAT.iml" />
+      <module fileurl="file://E:/mybluebell/.idea/bluebellmyself.iml" filepath="E:/mybluebell/.idea/bluebellmyself.iml" />
+      <module fileurl="file://E:/gin_mall/.idea/gin_mall.iml" filepath="E:/gin_mall/.idea/gin_mall.iml" />
+      <module fileurl="file://E:/lottery/.idea/lottery.iml" filepath="E:/lottery/.idea/lottery.iml" />
     </modules>
   </component>
 </project>

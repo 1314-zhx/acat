@@ -1,0 +1,34 @@
+# 本地测试的配置文件
+name: "acat"
+mode: "dev"
+port: "9090"
+version: "v1.0"
+start_time: "2025-11-21"
+jwt_secret: "liba-de,>,,fen_ifn|?!jv%$ci*ckn&"
+log:
+  level: "info"
+  filename: "acat.log"
+  max_size: 200
+  max_age: 30
+  max_backups: 7
+mysql:
+  host: "127.0.0.1"
+  port: "3306"
+  user: "root"
+  password: "123456"
+  dbname: "acat"
+  maxOpenConn: 200
+  maxIdleConn: 50
+redis:
+  host: "127.0.0.1"
+  port: "6379"
+  password: ""
+  db: 0
+  pool_size: 100
+
+# SMTP密钥是隐私，得存在环境变量中
+email:
+  ValidEmail: "http://localhost:8080/#/valid/email"
+  SmtpHost: "smtp.qq.com"
+  SmtpEmail: "2998759818@qq.com"
+  SmtpPass: ""

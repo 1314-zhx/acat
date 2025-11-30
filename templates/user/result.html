@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>查询面试结果 - ACAT</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 420px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #1e293b;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #334155;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover:not(:disabled) {
+            background: #2563eb;
+        }
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* 顶部 Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 9999;
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+            text-align: center;
+            max-width: 80%;
+            word-break: break-word;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        .toast.success { background: #10b981; }
+        .toast.error   { background: #ef4444; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>查询面试结果</h2>
+    <form id="resultForm">
+        <div class="form-group">
+            <label for="round">请输入轮次 *</label>
+            <input type="number" id="round" min="1" max="3" placeholder="例如：1" required />
+        </div>
+        <button type="submit" id="submitBtn">查询结果</button>
+    </form>
+</div>
+
+<script>
+    // 显示顶部提示
+    function showToast(message, isSuccess = true) {
+        let toast = document.getElementById('js-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'js-toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.className = `toast ${isSuccess ? 'success' : 'error'}`;
+        toast.classList.remove('show');
+        void toast.offsetWidth;
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    }
+
+    // 表单提交：不再检查前端 token，交由后端验证
+    document.getElementById('resultForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const roundInput = document.getElementById('round');
+        const submitBtn = document.getElementById('submitBtn');
+
+        const round = parseInt(roundInput.value.trim(), 10);
+        if (isNaN(round) || round < 1 || round > 2) {
+            showToast('请输入有效的轮次（1-2）', false);
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = '查询中...';
+
+        try {
+            const res = await fetch('/user/auth/result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 注意：如果 token 是通过 Cookie 自动携带的，就不需要手动加 header
+                    // 如果后端仍要求从 header 读 token，则需从 localStorage 取（但你说不用检查，所以这里先不加）
+                },
+                body: JSON.stringify({ round }),
+                credentials: 'include' // 👈 如果 token 在 Cookie 中，必须加这行！
+            });
+
+            const data = await res.json();
+
+            if (data.status === 200) {
+                showToast(data.data || '查询成功', true);
+                alert(`面试结果：${data.data}`);
+            } else {
+                // 假设后端约定：status 401 或 msg 包含 "登录" 表示未认证
+                if (res.status === 401 || data.status === 401 || /登录|认证|token/i.test(data.msg || '')) {
+                    showToast('请先登录', false);
+                    setTimeout(() => {
+                        window.location.href = '/login.html';
+                    }, 1500);
+                } else {
+                    showToast(data.msg || '查询失败', false);
+                }
+            }
+        } catch (err) {
+            console.error('请求失败:', err);
+            showToast('网络错误，请重试', false);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '查询结果';
+        }
+    });
+</script>
+</body>
+</html>

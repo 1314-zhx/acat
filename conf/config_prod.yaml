@@ -1,0 +1,6 @@
+# 发部版本
+name: "acat"
+mode: "releases"
+port: 9090
+version: "v1.1"
+start_time: "2025-11-21"

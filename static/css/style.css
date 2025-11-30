@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    display: flex;
+    max-width: 1200px;
+    margin: 40px auto;
+    gap: 30px;
+    padding: 0 20px;
+}
+
+/* 左侧面板 */
+.left-panel {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.logo img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+}
+
+.title {
+    margin: 20px 0;
+    font-size: 24px;
+    color: #3b82f6;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+}
+
+.btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn.secondary {
+    background: white;
+    color: #3b82f6;
+    border: 1px solid #d1d5db;
+    margin-top: 10px;
+}
+
+.btn.secondary:hover {
+    background: #f3f4f6;
+}
+
+/* 右侧面板 */
+.right-panel {
+    flex: 1;
+    background: #1e3a8a;
+    color: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 24px rgba(30, 58, 138, 0.3);
+}
+
+.right-panel h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+
+.right-panel p {
+    margin-bottom: 20px;
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+.tech-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.tech-buttons .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.tech-buttons .btn.tech-go {
+    background: #10b981;
+    color: white;
+}
+
+.tech-buttons .btn.tech-java {
+    background: #3b82f6;
+    color: white;
+}
+
+.tech-buttons .btn.tech-frontend {
+    background: #f59e0b;
+    color: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-panel,
+    .right-panel {
+        width: 90%;
+        margin-bottom: 20px;
+    }
+
+    .logo img {
+        width: 120px;
+        height: 120px;
+    }
+}

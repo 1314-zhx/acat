@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>面试报名</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f9fafc;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .slot-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: white;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .slot-card:hover:not(.disabled) {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .slot-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .slot-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .slot-footer {
+            color: #666;
+            font-size: 14px;
+        }
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            color: #999;
+        }
+        .close:hover {
+            color: #333;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background: #409eff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover:not(:disabled) {
+            background: #337ecc;
+        }
+        button:disabled {
+            background: #b0c4de;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success { background: #e6f4ea; color: #2e7d32; }
+        .error { background: #fce8e6; color: #c62828; }
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<h1>面试时段选择</h1>
+<div id="slotsContainer">
+    <p class="loading">加载中...</p>
+</div>
+
+<!-- 报名弹窗 -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 id="modalTitle">填写报名信息</h3>
+        <input type="text" id="modalName" placeholder="请输入真实姓名 *" maxlength="20" required />
+        <select id="modalDirection">
+            <option value="0">不确定</option>
+            <option value="1">后端Go</option>
+            <option value="2">后端Java</option>
+            <option value="3">前端</option>
+            <option value="4">后端</option>
+        </select>
+        <button id="submitBooking">确认报名</button>
+        <div id="modalMessage" class="message" style="display:none;"></div>
+    </div>
+</div>
+
+<script>
+    let selectedSlotId = null;
+
+    // 格式化时间（仅日期+时间）
+    function formatTime(isoStr) {
+        const date = new Date(isoStr);
+        return date.toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).replace(/\//g, '-');
+    }
+
+    // 加载时段列表
+    // 加载时段列表（适配后端返回的 [[start, end, id, round, num, max_num], ...]）
+    async function loadSlots() {
+        const container = document.getElementById('slotsContainer');
+        try {
+            const res = await fetch('/check');
+            if (!res.ok) throw new Error('请求失败');
+            const data = await res.json();
+
+            if (data.status !== 200 || !Array.isArray(data.data)) {
+                container.innerHTML = '<p class="error">时段数据格式错误</p>';
+                return;
+            }
+
+            const rawSlots = data.data; // [[start, end, id, round, num, max_num], ...]
+            if (rawSlots.length === 0) {
+                container.innerHTML = `
+                <div class="slot-card" style="text-align:center; opacity:0.8; cursor:default;">
+                    暂无可用面试时段
+                </div>
+            `;
+                return;
+            }
+
+            // 转换为对象，并过滤掉已开始的时段
+            const now = Math.floor(Date.now() / 1000); // 当前时间戳（秒）
+            const slots = rawSlots
+                .filter(arr => Array.isArray(arr) && arr.length >= 6)
+                .map(([startTs, endTs, id, round, num, maxNum]) => ({
+                    id,
+                    round,
+                    start_time: startTs, // Unix 时间戳（秒）
+                    end_time: endTs,
+                    num,
+                    max_num: maxNum
+                }))
+                .filter(slot => slot.start_time > now); // 只保留未开始的
+
+            if (slots.length === 0) {
+                container.innerHTML = `
+                <div class="slot-card" style="text-align:center; opacity:0.8; cursor:default;">
+                    暂无可用面试时段
+                </div>
+            `;
+                return;
+            }
+
+            // 格式化函数：将 Unix 时间戳（秒）转为本地字符串
+            function formatTimestamp(ts) {
+                const date = new Date(ts * 1000);
+                return date.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }).replace(/\//g, '-');
+            }
+
+            function formatTimeOnly(ts) {
+                const date = new Date(ts * 1000);
+                return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            container.innerHTML = slots.map(slot => {
+                const isFull = slot.num >= slot.max_num;
+                const start = formatTimestamp(slot.start_time);
+                const end = formatTimeOnly(slot.end_time);
+                return `
+                <div class="slot-card ${isFull ? 'disabled' : ''}"
+                     onclick="${isFull ? '' : `openModal(${slot.id})`}">
+                    <div class="slot-header">
+                        <span>${start} - ${end}</span>
+                        <span>${isFull ? '已满' : `${slot.num}/${slot.max_num}`}</span>
+                    </div>
+                    <div class="slot-footer">
+                        轮次：第 ${slot.round} 轮
+                    </div>
+                </div>
+            `;
+            }).join('');
+        } catch (err) {
+            console.error('加载时段失败:', err);
+            container.innerHTML = '<p class="error">加载失败，请刷新重试</p>';
+        }
+    }
+
+    // 打开报名弹窗
+    function openModal(slotId) {
+        selectedSlotId = slotId;
+        document.getElementById('modalName').value = '';
+        document.getElementById('modalDirection').value = '0';
+        document.getElementById('modalTitle').textContent = `报名时段 #${slotId}`;
+        document.getElementById('bookingModal').style.display = 'block';
+    }
+
+    // 关闭弹窗
+    document.querySelector('.close').onclick = () => {
+        document.getElementById('bookingModal').style.display = 'none';
+    };
+    window.onclick = (e) => {
+        if (e.target === document.getElementById('bookingModal')) {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+    };
+
+    // 显示消息
+    function showMessage(el, text, isSuccess) {
+        el.textContent = text;
+        el.className = `message ${isSuccess ? 'success' : 'error'}`;
+        el.style.display = 'block';
+        setTimeout(() => {
+            el.style.display = 'none';
+        }, 4000);
+    }
+
+    // 提交报名
+    document.getElementById('submitBooking').addEventListener('click', async () => {
+        const name = document.getElementById('modalName').value.trim();
+        const direction = parseInt(document.getElementById('modalDirection').value);
+        const btn = document.getElementById('submitBooking');
+        const msgEl = document.getElementById('modalMessage');
+
+        if (!name) {
+            showMessage(msgEl, '姓名不能为空', false);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = '提交中...';
+
+        try {
+            const response = await fetch('/user/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: name,
+                    direction: direction,
+                    slot_id: selectedSlotId
+                })
+            });
+
+            const data = await response.json();
+            let errorMsg = data.msg || '报名失败，请稍后重试';
+
+            if (response.ok && data.status === 200 && data.msg === 'Success') {
+                showMessage(msgEl, '✅ 报名成功！请留意通知。', true);
+                setTimeout(() => {
+                    document.getElementById('bookingModal').style.display = 'none';
+                    loadSlots(); // 刷新人数
+                }, 1500);
+            } else {
+                // 智能错误提示（按关键词匹配）
+                if (errorMsg.includes('截至')) {
+                    errorMsg = '面试时间已截至，无法报名。';
+                } else if (errorMsg.includes('已报满') || errorMsg.includes('已满')) {
+                    errorMsg = '该时段名额已满，请选择其他时间。';
+                } else if (errorMsg.includes('重复') || errorMsg.includes('已报名')) {
+                    errorMsg = '您已报名过该时段。';
+                }
+                showMessage(msgEl, errorMsg, false);
+            }
+        } catch (err) {
+            console.error('网络错误:', err);
+            showMessage(msgEl, '网络错误，请检查后重试。', false);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '确认报名';
+        }
+    });
+
+    // 初始化
+    loadSlots();
+</script>
+
+</body>
+</html>

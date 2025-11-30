@@ -1,0 +1,149 @@
+{"level":"INFO","time":"2025-11-27T15:53:53.760+0800","caller":"ACAT/main.go:29","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T15:53:53.809+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T15:57:28.340+0800","caller":"ACAT/main.go:29","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T15:57:28.390+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T15:57:48.029+0800","caller":"ACAT/main.go:29","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T15:57:48.083+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"ERROR","time":"2025-11-27T15:58:02.726+0800","caller":"util/enctrypt.go:64","msg":"AES key is empty"}
+{"level":"ERROR","time":"2025-11-27T15:58:02.736+0800","caller":"util/enctrypt.go:64","msg":"AES key is empty"}
+{"level":"INFO","time":"2025-11-27T15:58:03.805+0800","caller":"middleware/auth.go:49","msg":"AuthUser: missing or invalid token error: ","error":"http: named cookie not present"}
+{"level":"INFO","time":"2025-11-27T16:17:19.715+0800","caller":"ACAT/main.go:29","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T16:17:19.769+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T16:17:35.472+0800","caller":"logic/user.go:54","msg":"用户不存在或数据库查询失败","phone":"15229300775","error":"user not found"}
+{"level":"INFO","time":"2025-11-27T16:17:44.819+0800","caller":"logic/user.go:54","msg":"用户不存在或数据库查询失败","phone":"15229300775","error":"user not found"}
+{"level":"INFO","time":"2025-11-27T16:18:24.362+0800","caller":"logic/user.go:54","msg":"用户不存在或数据库查询失败","phone":"15229300775","error":"user not found"}
+{"level":"INFO","time":"2025-11-27T16:18:35.385+0800","caller":"logic/user.go:54","msg":"用户不存在或数据库查询失败","phone":"15229300775","error":"user not found"}
+{"level":"INFO","time":"2025-11-27T16:21:09.050+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T16:21:09.109+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T16:21:17.521+0800","caller":"middleware/auth.go:49","msg":"AuthUser: missing or invalid token error: ","error":"http: named cookie not present"}
+{"level":"INFO","time":"2025-11-27T16:43:00.259+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T16:43:00.309+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:05:17.671+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:05:17.727+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:06:05.288+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:06:05.339+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:08:25.702+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:08:25.759+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:11:05.567+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:11:05.615+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:15:29.273+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:15:29.335+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:15:45.285+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:15:45.391+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:19:48.312+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:19:48.400+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:25:34.794+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:25:34.844+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:26:52.313+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:26:52.366+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:32:08.220+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:32:08.285+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:39:52.594+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:39:52.646+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:43:19.677+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:43:19.750+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:44:05.911+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:44:06.016+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:45:54.548+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:45:54.613+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:46:55.061+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:46:55.137+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:47:59.191+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:47:59.320+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:49:39.373+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:49:39.441+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T17:51:07.492+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T17:51:07.599+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T18:31:50.458+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T18:31:50.510+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T18:34:51.447+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T18:34:51.556+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T18:36:55.931+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T18:36:56.004+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T18:37:01.689+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T18:37:01.763+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T18:43:33.828+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T18:43:33.881+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T18:50:09.320+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T18:50:09.401+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T19:04:27.711+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T19:04:27.769+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"WARN","time":"2025-11-27T19:05:37.897+0800","caller":"auth/jwt.go:60","msg":"解析 Token 失败","error":"token is malformed: could not JSON decode claim: json: cannot unmarshal string into Go struct field JwtClaims.user_id of type uint","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTAiLCJuYW1lIjoi5byg55qT57-UIiwiaWRlbnRpdHkiOjAsImlzcyI6ImFjYXQiLCJleHAiOjE3NjQ4NDExNDgsImlhdCI6MTc2NDIzNjM0OH0.okTuU00mG9tHcmpYpK0tQ2MgbSozW5--y44EHdUywgU"}
+{"level":"WARN","time":"2025-11-27T19:05:37.897+0800","caller":"middleware/auth.go:40","msg":"HTML 中间件：Token 验证失败","error":"token is malformed: could not JSON decode claim: json: cannot unmarshal string into Go struct field JwtClaims.user_id of type uint"}
+{"level":"WARN","time":"2025-11-27T19:05:43.474+0800","caller":"auth/jwt.go:60","msg":"解析 Token 失败","error":"token is malformed: could not JSON decode claim: json: cannot unmarshal string into Go struct field JwtClaims.user_id of type uint","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTAiLCJuYW1lIjoi5byg55qT57-UIiwiaWRlbnRpdHkiOjAsImlzcyI6ImFjYXQiLCJleHAiOjE3NjQ4NDExNDgsImlhdCI6MTc2NDIzNjM0OH0.okTuU00mG9tHcmpYpK0tQ2MgbSozW5--y44EHdUywgU"}
+{"level":"WARN","time":"2025-11-27T19:05:43.474+0800","caller":"middleware/auth.go:40","msg":"HTML 中间件：Token 验证失败","error":"token is malformed: could not JSON decode claim: json: cannot unmarshal string into Go struct field JwtClaims.user_id of type uint"}
+{"level":"INFO","time":"2025-11-27T19:07:58.042+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T19:07:58.122+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T19:10:39.307+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T19:10:39.357+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T19:57:49.569+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T19:57:49.651+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T19:59:23.512+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T19:59:23.588+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:02:38.618+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:02:38.697+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:03:08.858+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:03:08.934+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:04:01.009+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:04:01.085+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:05:17.884+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:05:17.962+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:06:43.172+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:06:43.244+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:07:23.088+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:07:23.154+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:07:40.339+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:07:40.405+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:14:01.271+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:14:01.351+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:18:33.369+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:18:33.424+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-27T20:20:48.884+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-27T20:20:48.936+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:03:12.907+0800","caller":"ACAT/main.go:26","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:03:13.228+0800","caller":"ACAT/main.go:31","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:04:47.735+0800","caller":"controller/user.go:100","msg":"controller/user.go PostHandler() failed shouldBindJSON() error : ","error":"EOF"}
+{"level":"INFO","time":"2025-11-30T14:32:38.251+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:32:38.298+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:33:09.049+0800","caller":"controller/user.go:100","msg":"controller/user.go PostHandler() failed shouldBindJSON() error : ","error":"EOF"}
+{"level":"INFO","time":"2025-11-30T14:35:11.830+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:35:11.887+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:35:26.858+0800","caller":"controller/user.go:100","msg":"controller/user.go PostHandler() failed shouldBindJSON() error : ","error":"EOF"}
+{"level":"INFO","time":"2025-11-30T14:37:07.250+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:37:07.297+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:37:20.076+0800","caller":"logic/user.go:221","msg":"logic/user.go Post get user by id error : ","error":"Error 1054 (42S22): Unknown column 'user_id' in 'where clause'"}
+{"level":"INFO","time":"2025-11-30T14:37:20.077+0800","caller":"logic/user.go:228","msg":"logic/user.go Post get slot by id error : ","error":"record not found"}
+{"level":"ERROR","time":"2025-11-30T14:37:20.077+0800","caller":"middleware/recover.go:43","msg":"[Recovery from panic]","error":"runtime error: invalid memory address or nil pointer dereference","request":"POST /user/auth/signup HTTP/1.1\r\nHost: 127.0.0.1:9090\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate, br, zstd\r\nAccept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6\r\nConnection: keep-alive\r\nContent-Length: 46\r\nContent-Type: application/json\r\nCookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNCwibmFtZSI6Iui1teWYieixqiIsImlkZW50aXR5IjowLCJpc3MiOiJhY2F0IiwiZXhwIjoxNzY1MDg3NDc5LCJpYXQiOjE3NjQ0ODI2Nzl9.BnFE8gxWMQPYGpJLykblJieJ9uHpjEUFI4zkbAiMF74\r\nOrigin: http://127.0.0.1:9090\r\nReferer: http://127.0.0.1:9090/user/auth/signup\r\nSec-Ch-Ua: \"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Microsoft Edge\";v=\"140\"\r\nSec-Ch-Ua-Mobile: ?0\r\nSec-Ch-Ua-Platform: \"Windows\"\r\nSec-Fetch-Dest: empty\r\nSec-Fetch-Mode: cors\r\nSec-Fetch-Site: same-origin\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\r\n\r\n","stack":"goroutine 22 [running]:\nruntime/debug.Stack()\n\tC:/Program Files/Go/src/runtime/debug/stack.go:26 +0x5e\nacat/router.NewRouter.GinRecovery.func9.1()\n\tD:/ACAT/middleware/recover.go:46 +0x4e9\npanic({0x1036ae0?, 0x1c76e00?})\n\tC:/Program Files/Go/src/runtime/panic.go:787 +0x132\nacat/logic.(*UserPost).Post(0xc0002f1500, 0xfd8800?, {0x13b10b0, 0xc000343340})\n\tD:/ACAT/logic/user.go:241 +0x5bd\nacat/controller.PostHandler(0xc000218400)\n\tD:/ACAT/controller/user.go:120 +0x697\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218400)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\nacat/router.NewRouter.AuthUserHTML.func10(0xc000218400)\n\tD:/ACAT/middleware/auth.go:27 +0xf2\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218400)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\nacat/router.NewRouter.GinRecovery.func9(0x6000000001f1850?)\n\tD:/ACAT/middleware/recover.go:57 +0x47\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218400)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc0000497e0?)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 +0x51\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218400)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000218400)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 +0xca\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218400)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0002664e0, 0xc000218400)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 +0x430\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0002664e0, {0x13afe50, 0xc000000540}, 0xc0002bcf00)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 +0x1aa\nnet/http.serverHandler.ServeHTTP({0x13ac740?}, {0x13afe50?, 0xc000000540?}, 0x6?)\n\tC:/Program Files/Go/src/net/http/server.go:3301 +0x8e\nnet/http.(*conn).serve(0xc0002be240, {0x13b1008, 0xc0001638f0})\n\tC:/Program Files/Go/src/net/http/server.go:2102 +0x625\ncreated by net/http.(*Server).Serve in goroutine 1\n\tC:/Program Files/Go/src/net/http/server.go:3454 +0x485\n"}
+{"level":"INFO","time":"2025-11-30T14:38:49.174+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:38:49.222+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:38:50.937+0800","caller":"logic/user.go:221","msg":"logic/user.go Post get user by id error : ","error":"Error 1054 (42S22): Unknown column 'user_id' in 'where clause'"}
+{"level":"INFO","time":"2025-11-30T14:38:50.937+0800","caller":"logic/user.go:228","msg":"logic/user.go Post get slot by id error : ","error":"record not found"}
+{"level":"ERROR","time":"2025-11-30T14:38:50.937+0800","caller":"middleware/recover.go:43","msg":"[Recovery from panic]","error":"runtime error: invalid memory address or nil pointer dereference","request":"POST /user/auth/signup HTTP/1.1\r\nHost: 127.0.0.1:9090\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate, br, zstd\r\nAccept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6\r\nConnection: keep-alive\r\nContent-Length: 46\r\nContent-Type: application/json\r\nCookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNCwibmFtZSI6Iui1teWYieixqiIsImlkZW50aXR5IjowLCJpc3MiOiJhY2F0IiwiZXhwIjoxNzY1MDg3NDc5LCJpYXQiOjE3NjQ0ODI2Nzl9.BnFE8gxWMQPYGpJLykblJieJ9uHpjEUFI4zkbAiMF74\r\nOrigin: http://127.0.0.1:9090\r\nReferer: http://127.0.0.1:9090/user/auth/signup\r\nSec-Ch-Ua: \"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Microsoft Edge\";v=\"140\"\r\nSec-Ch-Ua-Mobile: ?0\r\nSec-Ch-Ua-Platform: \"Windows\"\r\nSec-Fetch-Dest: empty\r\nSec-Fetch-Mode: cors\r\nSec-Fetch-Site: same-origin\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\r\n\r\n","stack":"goroutine 11 [running]:\nruntime/debug.Stack()\n\tC:/Program Files/Go/src/runtime/debug/stack.go:26 +0x5e\nacat/router.NewRouter.GinRecovery.func9.1()\n\tD:/ACAT/middleware/recover.go:46 +0x4e9\npanic({0x1bd6ae0?, 0x2816e00?})\n\tC:/Program Files/Go/src/runtime/panic.go:787 +0x132\nacat/logic.(*UserPost).Post(0xc000481900, 0x1b78800?, {0x1f510b0, 0xc0002af5e0})\n\tD:/ACAT/logic/user.go:241 +0x5bd\nacat/controller.PostHandler(0xc000218300)\n\tD:/ACAT/controller/user.go:120 +0x697\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218300)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\nacat/router.NewRouter.AuthUserHTML.func10(0xc000218300)\n\tD:/ACAT/middleware/auth.go:27 +0xf2\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218300)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\nacat/router.NewRouter.GinRecovery.func9(0x6000000001ee150?)\n\tD:/ACAT/middleware/recover.go:57 +0x47\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218300)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc0002137e0?)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 +0x51\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218300)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000218300)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 +0xca\ngithub.com/gin-gonic/gin.(*Context).Next(0xc000218300)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 +0x4e\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0002664e0, 0xc000218300)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 +0x430\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0002664e0, {0x1f4fe50, 0xc0000001c0}, 0xc000201a40)\n\tC:/Users/张皓翔/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 +0x1aa\nnet/http.serverHandler.ServeHTTP({0x1f4c740?}, {0x1f4fe50?, 0xc0000001c0?}, 0x6?)\n\tC:/Program Files/Go/src/net/http/server.go:3301 +0x8e\nnet/http.(*conn).serve(0xc000102990, {0x1f51008, 0xc000264e70})\n\tC:/Program Files/Go/src/net/http/server.go:2102 +0x625\ncreated by net/http.(*Server).Serve in goroutine 1\n\tC:/Program Files/Go/src/net/http/server.go:3454 +0x485\n"}
+{"level":"INFO","time":"2025-11-30T14:39:19.791+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:39:19.838+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:39:19.936+0800","caller":"logic/user.go:228","msg":"logic/user.go Post get slot by id error : ","error":"record not found"}
+{"level":"INFO","time":"2025-11-30T14:39:22.010+0800","caller":"logic/user.go:243","msg":"logic/user.go failed post error : ","error":"加锁失败: dial tcp: address 127.0.0.1: missing port in address"}
+{"level":"INFO","time":"2025-11-30T14:40:54.966+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:40:55.016+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:40:57.196+0800","caller":"logic/user.go:228","msg":"logic/user.go Post get slot by id error : ","error":"record not found"}
+{"level":"INFO","time":"2025-11-30T14:40:57.216+0800","caller":"logic/user.go:243","msg":"logic/user.go failed post error : ","error":"面试时段不存在"}
+{"level":"INFO","time":"2025-11-30T14:44:47.459+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:44:47.508+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:44:49.087+0800","caller":"logic/user.go:228","msg":"logic/user.go Post get slot by id error : ","error":"record not found"}
+{"level":"INFO","time":"2025-11-30T14:44:49.094+0800","caller":"logic/user.go:243","msg":"logic/user.go failed post error : ","error":"面试时段不存在"}
+{"level":"INFO","time":"2025-11-30T14:45:45.485+0800","caller":"logic/user.go:228","msg":"logic/user.go Post get slot by id error : ","error":"record not found"}
+{"level":"INFO","time":"2025-11-30T14:45:45.487+0800","caller":"logic/user.go:243","msg":"logic/user.go failed post error : ","error":"面试时段不存在"}
+{"level":"INFO","time":"2025-11-30T14:45:52.568+0800","caller":"logic/user.go:228","msg":"logic/user.go Post get slot by id error : ","error":"record not found"}
+{"level":"INFO","time":"2025-11-30T14:45:52.570+0800","caller":"logic/user.go:243","msg":"logic/user.go failed post error : ","error":"面试时段不存在"}
+{"level":"INFO","time":"2025-11-30T14:54:54.336+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:54:54.398+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T14:55:47.323+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T14:55:47.370+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T15:06:46.549+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T15:06:46.601+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T15:48:59.764+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T15:48:59.812+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T15:50:51.672+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T15:50:51.731+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-11-30T15:51:55.306+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-11-30T15:51:55.357+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}

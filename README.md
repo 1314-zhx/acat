@@ -65,12 +65,11 @@ go install github.com/swaggo/swag/v2/cmd/swag@latest
 go get xorm.io/xorm@latest
 ```
 
-> 5.uuid 安装
+> 5.viper 安装
 
 ```
-go get github.com/google/uuid@latest
+go get github.com/spf13/viper
 ```
-
 ## 项目结构
 ```
 ACAT-
