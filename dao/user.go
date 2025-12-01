@@ -149,8 +149,19 @@ func (dao *UserDaoWithRdb) Post(sid uint, uid uint, ctx context.Context) error {
 		tx.Rollback()
 		return err
 	}
-
-	// 7. 创建预约记录
+	// 7. 检查用户有几次面试
+	var existingCount int64
+	if err := tx.Model(&model.InterviewAssignment{}).
+		Where("user_id = ?", uid).
+		Count(&existingCount).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	if existingCount > 0 {
+		tx.Rollback()
+		return errors.New("你已预约过面试，请勿重复提交")
+	}
+	// 8. 创建预约记录
 	assignment := model.InterviewAssignment{
 		UserID: uid,
 		SlotID: sid,
@@ -167,7 +178,7 @@ func (dao *UserDaoWithRdb) Post(sid uint, uid uint, ctx context.Context) error {
 		return err
 	}
 
-	// 8. 提交事务
+	// 9. 提交事务
 	return tx.Commit().Error
 }
 func (dao *UserDao) GetAdmins() ([]model.AdminModel, error) {

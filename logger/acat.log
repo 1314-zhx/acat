@@ -109,3 +109,9 @@
 {"level":"INFO","time":"2025-12-01T18:36:59.567+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
 {"level":"INFO","time":"2025-12-01T19:10:35.600+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
 {"level":"INFO","time":"2025-12-01T19:10:35.649+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-01T22:10:27.507+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-12-01T22:10:27.578+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-01T22:14:38.871+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-12-01T22:14:38.920+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-01T22:14:43.042+0800","caller":"logic/user.go:246","msg":"logic/user.go failed post error : ","error":"你已预约过面试，请勿重复提交"}
+{"level":"INFO","time":"2025-12-01T22:14:47.424+0800","caller":"logic/user.go:246","msg":"logic/user.go failed post error : ","error":"你已预约过面试，请勿重复提交"}
