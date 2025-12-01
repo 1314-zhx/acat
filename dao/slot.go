@@ -2,6 +2,7 @@ package dao
 
 import (
 	"acat/model"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -15,5 +16,6 @@ func NewSlotDao(db *gorm.DB) *SlotDao {
 func (dao *SlotDao) GetSlotById(sid uint) (*model.InterviewSlot, error) {
 	var slot model.InterviewSlot
 	err := dao.db.Where("id = ? ", sid).First(&slot).Error
+	fmt.Println("i am here", slot)
 	return &slot, err
 }

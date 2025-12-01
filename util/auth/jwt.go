@@ -45,7 +45,6 @@ func GenerateToken(id uint, userName string, identity int) (string, error) {
 	return token, nil
 }
 
-// auth/token.go （或 auth/auth.go）
 func ParseToken(tokenStr string) (*JwtClaims, error) {
 	if tokenStr == "" {
 		return nil, errors.New("token 不能为空")

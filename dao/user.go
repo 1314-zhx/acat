@@ -16,7 +16,7 @@ import (
 )
 
 type UserDao struct {
-	db *gorm.DB // 只保留 db，不存 ctx
+	db *gorm.DB
 }
 type UserDaoWithRdb struct {
 	db  *gorm.DB
@@ -57,7 +57,7 @@ func (dao *UserDao) NotExistsUserByPhone(phone string) bool {
 }
 func (dao *UserDao) GetUserByID(id uint, ctx context.Context) (*model.UserModel, error) {
 	var user model.UserModel
-	err := dao.db.WithContext(ctx).Select("id", "name", "password", "phone").
+	err := dao.db.WithContext(ctx).Select("id", "name", "password", "phone", "first_pass").
 		Where("id = ?", id).
 		First(&user).Error
 	if err != nil {
@@ -169,4 +169,149 @@ func (dao *UserDaoWithRdb) Post(sid uint, uid uint, ctx context.Context) error {
 
 	// 8. 提交事务
 	return tx.Commit().Error
+}
+func (dao *UserDao) GetAdmins() ([]model.AdminModel, error) {
+	var admins []model.AdminModel
+	err := dao.db.Select("name", "id", "phone", "direction").Find(&admins).Error
+	return admins, err
+}
+func (dao *UserDao) Delete(uid uint) error {
+	// 开启事务
+	tx := dao.db.Begin()
+	// 防止panic导致连接丢失
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	var ia model.InterviewAssignment
+	if err := tx.Where("user_id = ?", uid).First(&ia).Error; err != nil {
+		tx.Rollback()
+		return errors.New("未报名，无法进行该操作")
+	}
+	// 物理删除
+	if err := tx.Unscoped().Delete(&ia).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 减少 num，防止减成负数
+	res := tx.Model(&model.InterviewSlot{}).
+		Where("id = ? AND num > 0", ia.SlotID).
+		Update("num", gorm.Expr("num - 1"))
+	if res.Error != nil {
+		tx.Rollback()
+		return res.Error
+	}
+	if res.RowsAffected == 0 {
+		tx.Rollback()
+		return errors.New("slot 人数已为0，无法再减少")
+	}
+
+	return tx.Commit().Error
+}
+func (dao *UserDao) Update(uid uint, newSlotID uint, name string, direction int) error {
+	if uid == 0 || newSlotID == 0 {
+		return errors.New("无效的用户ID或时段ID")
+	}
+
+	tx := dao.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	var ia model.InterviewAssignment
+	if err := tx.Where("user_id = ?", uid).First(&ia).Error; err != nil {
+		tx.Rollback()
+		return fmt.Errorf("未找到您的预约记录: %w", err)
+	}
+
+	if ia.SlotID == newSlotID {
+		tx.Rollback()
+		return nil // 无需更新
+	}
+
+	oldSlotID := ia.SlotID
+
+	// 1. 旧 slot 减 1
+	resDec := tx.Model(&model.InterviewSlot{}).
+		Where("id = ? AND num > 0", oldSlotID).
+		Update("num", gorm.Expr("num - 1"))
+	if resDec.Error != nil {
+		tx.Rollback()
+		return fmt.Errorf("释放原时段名额失败: %w", resDec.Error)
+	}
+	if resDec.RowsAffected == 0 {
+		tx.Rollback()
+		return errors.New("原面试时段人数异常，无法释放名额")
+	}
+
+	// 2. 新 slot 加 1
+	resInc := tx.Model(&model.InterviewSlot{}).
+		Where("id = ? AND num < max_num", newSlotID).
+		Update("num", gorm.Expr("num + 1"))
+	if resInc.Error != nil {
+		tx.Model(&model.InterviewSlot{}).Where("id = ?", oldSlotID).Update("num", gorm.Expr("num + 1"))
+		tx.Rollback()
+		return fmt.Errorf("目标时段已满或不可用: %w", resInc.Error)
+	}
+	if resInc.RowsAffected == 0 {
+		// 同样需要回滚旧 slot
+		tx.Model(&model.InterviewSlot{}).Where("id = ?", oldSlotID).Update("num", gorm.Expr("num + 1"))
+		tx.Rollback()
+		return errors.New("目标面试时段已满，无法更换")
+	}
+
+	// 3. 更新 assignment 的 slot_id
+	if err := tx.Model(&ia).Updates(model.InterviewAssignment{
+		SlotID:    newSlotID,
+		Direction: direction,
+	}).Error; err != nil {
+		tx.Model(&model.InterviewSlot{}).Where("id = ?", oldSlotID).Update("num", gorm.Expr("num + 1"))
+		tx.Model(&model.InterviewSlot{}).Where("id = ?", newSlotID).Update("num", gorm.Expr("num - 1"))
+		tx.Rollback()
+		return fmt.Errorf("更新预约记录失败: %w", err)
+	}
+
+	return tx.Commit().Error
+}
+
+// GetUserCurrentValidSlotID 返回用户当前唯一有效的面试时段 ID
+
+func (dao *UserDao) GetUserCurrentValidSlotID(uid uint) (uint, error) {
+	var assignments []model.InterviewAssignment
+
+	// 获取用户所有面试预约
+	if err := dao.db.Where("user_id = ?", uid).Find(&assignments).Error; err != nil {
+		return 0, err
+	}
+
+	if len(assignments) == 0 {
+		return 0, gorm.ErrRecordNotFound
+	}
+
+	now := util.NowUnix()
+	slotDao := NewSlotDao(dao.db)
+	var validSlotID uint
+	validCount := 0
+
+	for _, a := range assignments {
+		slot, err := slotDao.GetSlotById(a.SlotID)
+		if err != nil || slot == nil {
+			continue // 跳过无效关联
+		}
+		// 判断是否未截至
+		if now < slot.EndTime.Unix() {
+			validSlotID = slot.ID
+			validCount++
+		}
+	}
+	if validCount == 0 {
+		return 0, errors.New("当前无有效的面试预约")
+	}
+	fmt.Println("dao : ", validSlotID)
+	return validSlotID, nil
 }

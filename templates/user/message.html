@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>私信管理员</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        .admin-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .admin-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-info {
+            flex: 1;
+        }
+        .admin-info h3 {
+            margin: 0 0 4px 0;
+            color: #333;
+        }
+        .admin-info p {
+            margin: 2px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .btn-message {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-message:hover {
+            background-color: #40a9ff;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 24px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        .modal h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: #999;
+        }
+        .modal-buttons {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .btn-cancel, .btn-submit {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .btn-submit {
+            background: #52c41a;
+            color: white;
+        }
+        .btn-submit:disabled {
+            background: #bfbfbf;
+            cursor: not-allowed;
+        }
+
+        /* 加载与错误提示 */
+        .loading, .error {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            color: #ff4d4f;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align: center;">管理员列表</h2>
+<div class="admin-list" id="adminList">
+    <!-- 管理员数据将通过 fetch 动态加载 -->
+</div>
+
+<!-- 私信模态框 -->
+<div id="messageModal" class="modal">
+    <div class="modal-content">
+        <h2>私信管理员</h2>
+        <form id="messageForm">
+            <input type="hidden" id="receiveId" />
+
+            <div class="form-group">
+                <label for="title">标题</label>
+                <input
+                        type="text"
+                        id="title"
+                        value="发给管理员的消息"
+                        maxlength="50"
+                        required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="content">正文（最多15个字）</label>
+                <textarea
+                        id="content"
+                        placeholder="请输入消息内容..."
+                        maxlength="15"
+                        required
+                ></textarea>
+                <div class="char-count"><span id="charCount">0</span>/15</div>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
+                <button type="submit" class="btn-submit">发送</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 方向映射：根据你的 AdminModel.Direction (1=Go, 2=Java, 3=前端)
+    const DIRECTION_MAP = {
+        1: '后端Go',
+        2: '后端Java',
+        3: '前端'
+    };
+
+    // ✅ 从 /user/auth/show_admin 获取管理员列表
+    async function loadAdmins() {
+        const container = document.getElementById('adminList');
+        container.innerHTML = '<div class="loading">加载中...</div>';
+
+        try {
+            const response = await fetch('/user/auth/show_admin', {
+                method: 'GET',
+                credentials: 'include' // 如果使用 cookie 认证（如 Gin session），必须加这行！
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            // 假设你的响应格式为 { status: 200, data: [...], msg: "成功" }
+            if (result.status === 200 && Array.isArray(result.data)) {
+                renderAdmins(result.data);
+            } else {
+                throw new Error(result.msg || '未知错误');
+            }
+        } catch (err) {
+            console.error('加载管理员失败:', err);
+            container.innerHTML = `<div class="error">加载失败：${err.message}</div>`;
+        }
+    }
+
+    // 渲染管理员列表
+    function renderAdmins(admins) {
+        const container = document.getElementById('adminList');
+        if (!admins || admins.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#999;">暂无管理员可联系</div>';
+            return;
+        }
+
+        container.innerHTML = admins.map(admin => `
+            <div class="admin-card">
+                <div class="admin-info">
+                    <h3>${admin.name}</h3>
+                    <p>📞 ${admin.phone}</p>
+                    <p>方向：${DIRECTION_MAP[admin.direction] || '未知'}</p>
+                </div>
+                <button class="btn-message" onclick="openMessageModal(${admin.aid})">
+                    私信该管理员
+                </button>
+            </div>
+        `).join('');
+    }
+
+    // 打开私信模态框
+    function openMessageModal(adminId) {
+        document.getElementById('receiveId').value = adminId;
+        document.getElementById('title').value = "发给管理员的消息";
+        document.getElementById('content').value = "";
+        updateCharCount();
+        document.getElementById('messageModal').style.display = 'block';
+    }
+
+    // 关闭模态框
+    function closeModal() {
+        document.getElementById('messageModal').style.display = 'none';
+    }
+
+    // 更新字数统计
+    function updateCharCount() {
+        const content = document.getElementById('content').value;
+        document.getElementById('charCount').textContent = content.length;
+    }
+
+    // 表单提交处理
+    document.getElementById('messageForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const receiveId = parseInt(document.getElementById('receiveId').value);
+        const title = document.getElementById('title').value.trim();
+        const content = document.getElementById('content').value.trim();
+
+        // 校验
+        if (!title) {
+            alert("标题不能为空");
+            return;
+        }
+        if (title.length > 50) {
+            alert("标题不能超过50个字");
+            return;
+        }
+        if (!content) {
+            alert("正文不能为空");
+            return;
+        }
+        if (content.length > 15) {
+            alert("正文不能超过15个字");
+            return;
+        }
+
+        try {
+            const response = await fetch('/user/auth/letter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', // 同样，如果需要认证
+                body: JSON.stringify({
+                    receive_id: receiveId,
+                    title: title,
+                    content: content
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok && data.status === 200) {
+                alert("消息发送成功！");
+                closeModal();
+            } else {
+                alert("发送失败：" + (data.msg || data.error || "未知错误"));
+            }
+        } catch (err) {
+            console.error("发送失败:", err);
+            alert("网络错误，请稍后重试");
+        }
+    });
+
+    // 实时字数统计
+    document.getElementById('content').addEventListener('input', updateCharCount);
+
+    // 点击模态框外部关闭
+    window.onclick = function(event) {
+        const modal = document.getElementById('messageModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    // ✅ 页面加载时自动请求管理员列表
+    document.addEventListener('DOMContentLoaded', () => {
+        loadAdmins();
+    });
+</script>
+
+</body>
+</html>

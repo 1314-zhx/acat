@@ -35,9 +35,6 @@ func CheckHandler(c *gin.Context) {
 		Error:  "",
 	})
 }
-func LetterHandler(c *gin.Context) {
-	//TODO:
-}
 func Norouter(c *gin.Context) {
 	c.HTML(200, "norouter.html", nil)
 }

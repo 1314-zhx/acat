@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>更新我的预约</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f9fafc;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .current-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .current-info h2 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+        .current-info p {
+            margin: 4px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .actions button {
+            padding: 8px 16px;
+            margin-left: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-update { background: #409eff; color: white; }
+        .btn-delete { background: #f56c6c; color: white; }
+        .slots-title {
+            margin: 20px 0 12px;
+            font-size: 18px;
+            color: #333;
+        }
+        .slot-list {
+            display: none; /* 默认隐藏 */
+        }
+        .slot-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: white;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .slot-card:hover:not(.disabled) {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .slot-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .slot-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            color: #999;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .message {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success { background: #e6f4ea; color: #2e7d32; }
+        .error { background: #fce8e6; color: #c62828; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: #409eff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<a href="javascript:history.back()" class="back-link">← 返回</a>
+
+<h1>更新我的预约</h1>
+
+<!-- 当前预约 -->
+<div id="currentSlotContainer">
+    <p style="text-align:center; color:#666;">加载中...</p>
+</div>
+
+<!-- 所有可选时段（点击“更新”后显示） -->
+<div class="slots-title">选择新的面试时段：</div>
+<div id="allSlotsContainer" class="slot-list">
+    <p class="loading">加载时段中...</p>
+</div>
+
+<!-- 更新表单弹窗 -->
+<div id="updateModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 id="modalTitle">填写信息</h3>
+        <input type="text" id="modalName" placeholder="姓名 *" maxlength="20" />
+        <select id="modalDirection">
+            <option value=0>不确定</option>
+            <option value=1>后端Go</option>
+            <option value=2>后端Java</option>
+            <option value=3>前端</option>
+            <option value=4>后端</option>
+        </select>
+        <button class="btn-update" id="submitUpdate">确认提交</button>
+        <div id="modalMessage" class="message" style="display:none;"></div>
+    </div>
+</div>
+
+<script>
+    let selectedSlotIdForUpdate = null;
+    let currentUserSlotId = null;
+
+    function formatDateTime(ts) {
+        const d = new Date(ts * 1000);
+        return d.toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).replace(/\//g, '-');
+    }
+
+    function formatTimeOnly(ts) {
+        return new Date(ts * 1000).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // 1. 加载当前用户的预约
+    async function loadCurrentUserSlot() {
+        const container = document.getElementById('currentSlotContainer');
+        try {
+            const res = await fetch('/user/auth/my_slot');
+            if (!res.ok) {
+                if (res.status === 401) {
+                    container.innerHTML = '<p class="error">请先登录</p>';
+                } else {
+                    container.innerHTML = '<p class="error">加载失败，请重试</p>';
+                }
+                return;
+            }
+
+            const data = await res.json();
+
+            if (data.status === 200 && data.data) {
+                const slot = data.data; // ← 直接就是 slot 对象！
+                currentUserSlotId = slot.id;
+
+                // 注意：start_time 是 ISO 字符串，不是时间戳！
+                const startTimeTs = new Date(slot.start_time).getTime() / 1000;
+                const endTimeTs = new Date(slot.end_time).getTime() / 1000;
+
+                container.innerHTML = `
+        <div class="current-card">
+            <div class="current-info">
+                <h2>${formatDateTime(startTimeTs)} - ${formatTimeOnly(endTimeTs)}</h2>
+                <p>轮次：第 ${slot.round} 轮</p>
+            </div>
+            <div class="actions">
+                <button class="btn-update" onclick="showAllSlots()">更新</button>
+                <button class="btn-delete" onclick="deleteCurrentAssignment()">删除</button>
+            </div>
+        </div>
+    `;
+            } else {
+                container.innerHTML = '<p class="error">您尚未预约面试</p>';
+            }
+        } catch (err) {
+            console.error('加载当前预约失败:', err);
+            container.innerHTML = '<p class="error">网络错误，请检查连接</p>';
+        }
+    }
+    // 2. 显示所有可选时段（用于更新）
+    async function showAllSlots() {
+        const container = document.getElementById('allSlotsContainer');
+        container.style.display = 'block';
+        container.innerHTML = '<p class="loading">加载中...</p>';
+
+        try {
+            const res = await fetch('/check'); // 获取所有可选时段
+            if (!res.ok) throw new Error('加载失败');
+            const data = await res.json();
+
+            if (data.status !== 200 || !Array.isArray(data.data)) {
+                container.innerHTML = '<p class="error">时段数据异常</p>';
+                return;
+            }
+
+            const now = Math.floor(Date.now() / 1000);
+            const slots = data.data
+                .filter(arr => Array.isArray(arr) && arr.length >= 6)
+                .map(([startTs, endTs, id, round, num, maxNum]) => ({
+                    id,
+                    round,
+                    start_time: startTs,
+                    end_time: endTs,
+                    num,
+                    max_num: maxNum
+                }))
+                .filter(slot => slot.start_time > now);
+
+            if (slots.length === 0) {
+                container.innerHTML = '<p>暂无可用面试时段</p>';
+                return;
+            }
+
+            container.innerHTML = slots.map(slot => {
+                const isFull = slot.num >= slot.max_num;
+                return `
+                <div class="slot-card ${isFull ? 'disabled' : ''}"
+                     onclick="${isFull ? '' : `openUpdateModal(${slot.id})`}">
+                    <div class="slot-header">
+                        <span>${formatDateTime(slot.start_time)} - ${formatTimeOnly(slot.end_time)}</span>
+                        <span>${isFull ? '已满' : `${slot.num}/${slot.max_num}`}</span>
+                    </div>
+                    <div>轮次：第 ${slot.round} 轮</div>
+                </div>`;
+            }).join('');
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = '<p class="error">加载时段失败</p>';
+        }
+    }
+
+    // 3. 删除当前预约
+    async function deleteCurrentAssignment() {
+        if (!confirm('确定要取消当前预约吗？')) return;
+        if (!currentUserSlotId) {
+            alert('未获取到当前预约信息');
+            return;
+        }
+
+        try {
+            const res = await fetch('/user/auth/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    slot_id: currentUserSlotId,
+                    is_delete: 1
+                })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.status === 200) {
+                alert('✅ 预约已取消');
+            } else {
+                alert(data.msg || '取消失败');
+            }
+        } catch (err) {
+            alert('网络错误');
+        }
+    }
+
+    // 4. 弹出更新表单
+    function openUpdateModal(slotId) {
+        selectedSlotIdForUpdate = slotId;
+        document.getElementById('modalName').value = '';
+        document.getElementById('modalDirection').value = '0';
+        document.getElementById('modalTitle').textContent = `更新至时段 #${slotId}`;
+        document.getElementById('updateModal').style.display = 'block';
+    }
+
+    // 关闭弹窗
+    document.querySelector('.close').onclick = () => {
+        document.getElementById('updateModal').style.display = 'none';
+    };
+    window.onclick = (e) => {
+        if (e.target === document.getElementById('updateModal')) {
+            document.getElementById('updateModal').style.display = 'none';
+        }
+    };
+
+    // 5. 提交更新（更换时段或保留原时段）
+    document.getElementById('submitUpdate').addEventListener('click', async () => {
+        const name = document.getElementById('modalName').value.trim();
+        const direction = parseInt(document.getElementById('modalDirection').value);
+        const msgEl = document.getElementById('modalMessage');
+
+        if (!name) {
+            showMessage(msgEl, '姓名不能为空', false);
+            return;
+        }
+
+        const btn = document.getElementById('submitUpdate');
+        btn.disabled = true;
+        btn.textContent = '提交中...';
+
+        try {
+            const res = await fetch('/user/auth/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    slot_id: selectedSlotIdForUpdate, // 用户点击的任意 slot_id
+                    name: name,
+                    direction: direction,
+                    is_delete: 0
+                })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.status === 200) {
+                showMessage(msgEl, '✅ 更新成功！', true);
+                setTimeout(() => {
+
+                }, 1500);
+            } else {
+                let msg = data.msg || '操作失败';
+                if (msg.includes('已满')) msg = '所选时段已满';
+                showMessage(msgEl, msg, false);
+            }
+        } catch (err) {
+            showMessage(msgEl, '网络错误', false);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '确认提交';
+        }
+    });
+
+    function showMessage(el, text, isSuccess) {
+        el.textContent = text;
+        el.className = `message ${isSuccess ? 'success' : 'error'}`;
+        el.style.display = 'block';
+        setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    // 初始化
+    loadCurrentUserSlot();
+</script>
+
+</body>
+</html>

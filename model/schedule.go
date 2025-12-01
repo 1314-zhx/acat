@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 // InterviewSlot 表示一个面试时间槽，对应数据库中的 interview_slot 表。
 // 每个时间槽属于某一轮次，并具有开始/结束时间。
@@ -17,10 +20,12 @@ type InterviewSlot struct {
 // 通过 UserId 和 SlotId 建立唯一约束，确保同一用户在同一轮次不会被重复分配。
 // 对应interview_assignment表
 type InterviewAssignment struct {
-	ID     uint `gorm:"primaryKey;autoIncrement"`
-	UserID uint `gorm:"not null;uniqueIndex:slot_user"`
-	SlotID uint `gorm:"not null;uniqueIndex:slot_user"`
-	Round  int  `gorm:"not null;index"`
+	ID        uint           `gorm:"primaryKey;autoIncrement"`
+	UserID    uint           `gorm:"not null;uniqueIndex:slot_user"`
+	SlotID    uint           `gorm:"not null;uniqueIndex:slot_user"`
+	Round     int            `gorm:"not null;index"`
+	Direction int            `gorm:"not null;default:0"` // 0不确定，1为Go，2为Java，3为前端，4为后端
+	DeletedAt gorm.DeletedAt // 软删除，DeletedAt不能改
 }
 
 // ScheduleResponse 是返回给前端的面试日程响应结构。

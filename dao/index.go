@@ -3,6 +3,7 @@ package dao
 import (
 	"acat/model"
 	"context"
+	"fmt"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"time"
@@ -34,14 +35,14 @@ func (d *IndexDao) Check(ctx context.Context) ([][]int64, error) {
 	schedule := make([][]int64, len(slots))
 	for i, slot := range slots {
 		schedule[i] = []int64{
-			slot.StartTime.Unix(), // [0] start
-			slot.EndTime.Unix(),   // [1] end
-			int64(slot.ID),        // [2] id
-			int64(slot.Round),     // [3] round
-			int64(slot.Num),       // [4] num
-			int64(slot.MaxNum),    // [5] max_num
+			slot.StartTime.Unix(),
+			slot.EndTime.Unix(),
+			int64(slot.ID),
+			int64(slot.Round),
+			int64(slot.Num),
+			int64(slot.MaxNum),
 		}
 	}
-
+	fmt.Println("hhh ", schedule)
 	return schedule, nil
 }

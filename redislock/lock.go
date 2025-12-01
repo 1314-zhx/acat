@@ -51,7 +51,7 @@ func NewRedisLock(rdb *redis.Client, key string, expire time.Duration) *RedisLoc
 
 // Lock 尝试获取锁
 // 返回 true 表示成功获取，false 表示已被占用
-// 注意：调用方需保存返回的 redislock 对象，并在业务结束后调用 Unlock()
+// 调用方需保存返回的 redislock 对象，并在业务结束后调用 Unlock()
 func (rl *RedisLock) Lock(ctx context.Context) (bool, error) {
 	// 生成唯一 value（必须全局唯一）
 	rl.value = uuid.New().String()

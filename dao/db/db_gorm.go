@@ -14,7 +14,7 @@ import (
 var DB *gorm.DB
 var once sync.Once
 
-// InitDB 初始化 GORM 数据库连接（幂等、线程安全）
+// InitDB 初始化 GORM 数据库连接
 func InitDB() error {
 	var err error
 	once.Do(func() {
@@ -41,7 +41,7 @@ func InitDB() error {
 	return err
 }
 
-// autoMigrate 自动迁移表结构（对应 XORM 的 Sync2）
+// autoMigrate 自动迁移表结构
 func autoMigrate() error {
 	return DB.AutoMigrate(
 		&model.UserModel{},
@@ -49,6 +49,6 @@ func autoMigrate() error {
 		&model.InterviewSlot{},
 		&model.InterviewAssignment{},
 		&model.InterviewResult{},
-		&model.Message{}, // 确保 Message 模型已定义
+		&model.Message{},
 	)
 }

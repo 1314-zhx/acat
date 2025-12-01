@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 	"log"
 	"regexp"
 )
@@ -229,6 +230,7 @@ func (p *UserPost) Post(uid uint, ctx context.Context) serializer.Response {
 		log.Println("logic/user.go Post get slot by id error : ", err)
 	}
 	// 用户报二面，但一面没过
+	fmt.Println(user.FirstPass, user)
 	if slot.Round == 2 && user.FirstPass != 1 {
 		co = code.FirstViewNotPass
 		return serializer.Response{
@@ -240,11 +242,173 @@ func (p *UserPost) Post(uid uint, ctx context.Context) serializer.Response {
 	userDaoWithRdb := dao.NewUserDaoWithRdb(db.DB, redislock.GetRDB())
 	err = userDaoWithRdb.Post(p.SlotId, user.ID, ctx)
 	if err != nil {
+		co = code.Error
 		zap.L().Info("logic/user.go failed post error : ", zap.Error(err))
 		log.Println("logic/user.go failed post error : ", err)
 	}
 	return serializer.Response{
 		Status: co,
 		Msg:    code.GetMsg(co),
+	}
+}
+
+//-------------->用户给管理员发消息<-----------------//
+type Letter struct {
+	ReceiveID uint   `json:"receive_id"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+}
+
+func (l *Letter) Letter(uid uint) serializer.Response {
+	co := code.Success
+	if l.Title == "" {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  errors.New("无标题").Error(),
+		}
+	}
+	if len(l.Content) > 50 {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  errors.New("正文超过50字").Error(),
+		}
+	}
+	letterDao := dao.NewLetterDao(db.DB)
+	err := letterDao.Letter(l.Title, l.Content, l.ReceiveID, uid)
+	if err != nil {
+		zap.L().Info("logic/letter.go failed dao error : ", zap.Error(err))
+		log.Println("logic/letter.go failed dao error : ", err)
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  errors.New("数据库错误").Error(),
+		}
+	}
+	return serializer.Response{
+		Status: co,
+		Msg:    code.GetMsg(co),
+	}
+}
+
+// 展示管理员列表
+func ShowAdmin() serializer.Response {
+	co := code.Success
+	// 因为都是用户相关操作，使用都使用用户的数据库实例模型
+	showAdminDao := dao.NewUserDao(db.DB)
+	admins, err := showAdminDao.GetAdmins()
+	if err != nil {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Data:   nil, // 失败，不返回任何值
+			Msg:    code.GetMsg(co),
+			Error:  errors.New("数据库错误").Error(),
+		}
+	}
+	// 脱敏
+	var adminViews []model.AdminView
+	for _, admin := range admins {
+		var adminView model.AdminView
+		adminView.Name = admin.Name
+		adminView.Phone = admin.Phone
+		adminView.Direction = admin.Direction
+		adminView.Aid = admin.ID
+		adminViews = append(adminViews, adminView)
+	}
+	return serializer.Response{
+		Status: co,
+		Data:   adminViews,
+		Msg:    code.GetMsg(co),
+	}
+}
+
+//--------------->用户更新<-----------------//
+type UserUpdate struct {
+	IsDelete int `json:"is_delete"` // 1 表示删除该面试预约 0 表示不删除
+	UserPost                        // 继承UserPost，其实更新也相当于一次新的报名
+}
+
+func (u *UserUpdate) Update(uid uint) serializer.Response {
+	co := code.Success
+	if u.IsDelete == 1 {
+		userDao := dao.NewUserDao(db.DB)
+		err := userDao.Delete(uid)
+		if err != nil {
+			co = code.Error
+			zap.L().Info("logic/user.go Update failed error : ", zap.Error(err))
+			log.Println("logic/user.go Update failed error : ", err)
+			return serializer.Response{
+				Status: co,
+				Msg:    code.GetMsg(co),
+				Error:  errors.New("数据库错误").Error(),
+			}
+		}
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+		}
+	} else {
+		userDao := dao.NewUserDao(db.DB)
+		err := userDao.Update(uid, u.SlotId, u.Name, u.Direction)
+		if err != nil {
+			co = code.Error
+			zap.L().Info("logic/user.go Update failed error : ", zap.Error(err))
+			log.Println("logic/user.go Update failed error : ", err)
+			return serializer.Response{
+				Status: co,
+				Msg:    code.GetMsg(co),
+				Error:  errors.New("数据库错误").Error(),
+			}
+		}
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+		}
+	}
+}
+func ShowSlot(uid uint) serializer.Response {
+	co := code.Success
+	var err error
+	var slotId uint
+	var slot *model.InterviewSlot
+	slotDao := dao.NewSlotDao(db.DB)
+	userDao := dao.NewUserDao(db.DB)
+	slotId, err = userDao.GetUserCurrentValidSlotID(uid)
+	if err != nil {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    "获取面试时段失败",
+			Error:  err.Error(),
+		}
+	}
+	slot, err = slotDao.GetSlotById(slotId)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.Response{
+				Status: 200, // 注意：业务上“无数据”仍返回 200
+				Data:   nil, // Data 为 nil 表示无预约
+				Msg:    "暂无面试安排",
+			}
+		}
+		// 数据库错误
+		return serializer.Response{
+			Status: 500,
+			Data:   nil,
+			Msg:    "数据库查询失败",
+			Error:  err.Error(),
+		}
+	}
+	fmt.Println("logic : ", slot)
+	return serializer.Response{
+		Status: co,
+		Data:   slot,
+		Msg:    code.GetMsg(co),
+		Error:  "",
 	}
 }

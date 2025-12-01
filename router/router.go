@@ -68,19 +68,36 @@ func NewRouter() *gin.Engine {
 				c.HTML(200, "booking.html", nil)
 			})
 			// 用户联系管理员，提交问题，参看邮箱
-			authed.GET("/conversation", controller.LetterHandler)
+			authed.POST("/conversation", controller.LetterHandler)
+			authed.GET("/conversation", func(c *gin.Context) {
+				c.HTML(200, "message.html", nil)
+			})
+			// 展示管理员列表
+			authed.GET("/show_admin", controller.ShowAdminHandler)
+
 			// 用户提交更新面试预约的请求
-			authed.GET("/update", controller.UpdateHandler)
+			authed.POST("/update", controller.UpdateHandler)
+			authed.GET("/my_slot", controller.ShowSlotHandler)
+			authed.GET("/update", func(c *gin.Context) {
+				c.HTML(200, "update.html", nil)
+			})
 			// 用户个人中心
 			authed.GET("/account", controller.AccountHandler)
 		}
 	}
 	// 管理员登录
-	r.POST("/admin/login", controller.AdminLoginHandler)
+	r.POST("/admin_login", controller.AdminLoginHandler)
+	r.GET("/admin_login", func(c *gin.Context) {
+		c.HTML(200, "admin_login.html", nil)
+	})
 	// 管理员路由
 	adminRouter := r.Group("/admin")
 	adminRouter.Use(middleware.AuthUserHTML())
 	{
+		// 管理员中心
+		adminRouter.GET("/center", func(c *gin.Context) {
+			c.HTML(200, "admin_center.html", nil)
+		})
 		// 管理员设置面试表
 		adminRouter.POST("/settimetable", controller.AdminSetScheduleHandler)
 		// 管理员设置面试结果

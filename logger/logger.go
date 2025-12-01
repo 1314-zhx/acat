@@ -24,13 +24,10 @@ func Init(cfg *setting.LogConf, mode string) (err error) {
 	if err != nil {
 		return
 	}
-	// 创建日志核心（Core）
 	var core zapcore.Core
 	if mode == "dev" {
-		// 开发模式，日志输出到终端
-		// 是 Zap 日志库中用于创建一个适合开发环境的、人类可读的日志编码器（Encoder） 的典型写法。
 		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
-		core = zapcore.NewTee( // 将多个 zapcore.Core 实例组合成一个复合的 Core
+		core = zapcore.NewTee(
 			zapcore.NewCore(encoder, writeSyncer, l),                    //输出到文件
 			zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), l), //输出到终端
 		)
@@ -39,7 +36,7 @@ func Init(cfg *setting.LogConf, mode string) (err error) {
 	}
 
 	lg = zap.New(core, zap.AddCaller())
-	zap.ReplaceGlobals(lg) // 替换zap包中全局的logger实例，后续在其他包中只需使用zap.L()调用即可
+	zap.ReplaceGlobals(lg)
 	return
 }
 
