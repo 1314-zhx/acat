@@ -10,14 +10,16 @@ import (
 	"acat/model/code"
 	"acat/redislock"
 	"acat/serializer"
+	"acat/util"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"log"
-	"regexp"
+	"time"
 )
 
 //---------------->用户登录<-------------------//
@@ -118,7 +120,7 @@ func (r *UserRes) Register() serializer.Response {
 			Error:  errors.New("参数错误").Error(),
 		}
 	}
-	if len(r.Phone) != 11 {
+	if len(r.Phone) != 11 || !util.IsPhone(r.Phone) {
 		co = code.InvalidPhoneForm
 		zap.L().Info("logic/user.go Register() failed phone form error : ", zap.Error(errors.New(code.GetMsg(co))))
 		log.Println("logic/user.go Register() failed phone form error : ", errors.New(code.GetMsg(co)))
@@ -128,8 +130,8 @@ func (r *UserRes) Register() serializer.Response {
 			Error:  errors.New("格式不正确").Error(),
 		}
 	}
-	validEmail := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	if !validEmail.MatchString(r.Email) {
+
+	if !util.IsEmail(r.Email) {
 		co = code.EmailFormError
 		zap.L().Info("logic/user.go Register() failed email form error : ", zap.Error(errors.New(code.GetMsg(co))))
 		log.Println("logic/user.go Register() failed email form error : ", errors.New(code.GetMsg(co)))
@@ -352,7 +354,8 @@ func (u *UserUpdate) Update(uid uint) serializer.Response {
 			Status: co,
 			Msg:    code.GetMsg(co),
 		}
-	} else {
+	} else if u.IsDelete == 0 {
+		fmt.Println("111")
 		userDao := dao.NewUserDao(db.DB)
 		err := userDao.Update(uid, u.SlotId, u.Name, u.Direction)
 		if err != nil {
@@ -369,6 +372,10 @@ func (u *UserUpdate) Update(uid uint) serializer.Response {
 			Status: co,
 			Msg:    code.GetMsg(co),
 		}
+	}
+	return serializer.Response{
+		Status: code.Error,
+		Msg:    "无效更改",
 	}
 }
 func ShowSlot(uid uint) serializer.Response {
@@ -410,5 +417,163 @@ func ShowSlot(uid uint) serializer.Response {
 		Data:   slot,
 		Msg:    code.GetMsg(co),
 		Error:  "",
+	}
+}
+
+//------------>用户忘记密码<--------------//
+type Forget struct {
+	Param string `json:"param"`
+}
+
+func (f *Forget) Forget() serializer.Response {
+	// 获取6位验证码
+	vCode := GenerateCode()
+
+	// 构造 redis key
+	var key string
+	if f.Param == "" {
+		return serializer.Response{
+			Status: code.InvalidParam,
+			Msg:    code.GetMsg(code.InvalidParam),
+			Error:  "空传递",
+		}
+	} else if util.IsEmail(f.Param) {
+		key = "verify:email:" + f.Param
+		err := SendEmailCode(f.Param, vCode)
+		if err != nil {
+			zap.L().Info("logic/user.go SendEmailCode failed error : ", zap.Error(err))
+			log.Println("logic/user.go SendEmailCode failed error : ", err)
+			return serializer.Response{
+				Status: code.Error,
+				Msg:    code.GetMsg(code.Error),
+				Error:  "发送邮件失败",
+			}
+		}
+	} else {
+		return serializer.Response{
+			Status: code.InvalidParam,
+			Msg:    code.GetMsg(code.InvalidParam),
+			Error:  "无效参数",
+		}
+	}
+	ctx := context.Background()
+	// 将验证码存入redis5分钟
+	if err := redislock.GetRDB().Set(ctx, key, vCode, 5*time.Minute).Err(); err != nil {
+		zap.L().Error("Redis 存储验证码失败", zap.Error(err))
+	}
+	return serializer.Response{
+		Status: code.Success,
+		Msg:    code.GetMsg(code.Success),
+	}
+}
+
+type ResetPassword struct {
+	Account     string `json:"account"`
+	Code        string `json:"code"`
+	NewPassword string `json:"new_password"`
+}
+
+func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
+	co := code.Success
+	// 1. 参数校验
+	if r.Account == "" || r.Code == "" || r.NewPassword == "" {
+		return serializer.Response{
+			Status: code.InvalidParam,
+			Msg:    code.GetMsg(code.InvalidParam),
+			Error:  "缺少必要参数",
+		}
+	}
+
+	// 2. 构造 Redis key（和 Forget 里完全一致！）
+	var key string
+	if util.IsEmail(r.Account) {
+		key = "verify:email:" + r.Account
+	} else {
+		return serializer.Response{
+			Status: code.InvalidParam,
+			Msg:    "无效账号格式",
+			Error:  "请使用注册邮箱",
+		}
+	}
+
+	// 3. 从 Redis 读取验证码
+	storedCode, err := redislock.GetRDB().Get(ctx, key).Result()
+	if err != nil {
+		if err == redis.Nil {
+			return serializer.Response{
+				Status: code.Error,
+				Msg:    "验证码已过期或未请求",
+				Error:  "无效验证码",
+			}
+		}
+		zap.L().Error("Redis 读取失败", zap.Error(err))
+		return serializer.Response{
+			Status: code.Error,
+			Msg:    "服务异常",
+			Error:  "内部错误",
+		}
+	}
+
+	// 4. 验证码比对
+	if storedCode != r.Code {
+		return serializer.Response{
+			Status: code.Error,
+			Msg:    "验证码错误",
+			Error:  "验证码不匹配",
+		}
+	}
+
+	// 5. 查找用户（通过 account）
+	userDao := dao.NewUserDao(db.DB)
+	var user *model.UserModel
+	if util.IsEmail(r.Account) {
+		user, err = userDao.GetUserByEmail(r.Account, ctx)
+		if err != nil {
+			co = code.Error
+			zap.L().Info("logic/user.go ResetPassword failed error : ", zap.Error(err))
+			return serializer.Response{
+				Status: co,
+				Data:   nil,
+				Msg:    "",
+				Error:  "",
+			}
+		}
+	}
+	if user == nil {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Data:   nil,
+			Msg:    "未找到该用户",
+			Error:  "未找到该用户",
+		}
+	}
+	// 6. 加密新密码
+	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(r.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		zap.L().Error("密码加密失败", zap.Error(err))
+		return serializer.Response{
+			Status: code.Error,
+			Msg:    "密码处理失败",
+			Error:  "加密错误",
+		}
+	}
+
+	// 7. 更新数据库
+	err = userDao.ResetPassword(ctx, user.ID, string(hashedPwd))
+	if err != nil {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "重置密码失败",
+		}
+	}
+	// 8. 删除 Redis 验证码（一次性使用）
+	redislock.GetRDB().Del(ctx, key)
+
+	return serializer.Response{
+		Status: co,
+		Msg:    code.GetMsg(co),
 	}
 }

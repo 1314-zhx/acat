@@ -28,7 +28,7 @@ redis:
 
 # SMTP密钥是隐私，得存在环境变量中
 email:
-  ValidEmail: "http://localhost:8080/#/valid/email"
+  ValidEmail: "http://localhost:9090/#/valid/email"
   SmtpHost: "smtp.qq.com"
   SmtpEmail: "2998759818@qq.com"
   SmtpPass: ""

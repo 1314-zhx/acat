@@ -78,7 +78,7 @@ func Init() error {
 
 	// 从环境变量加载 SMTP 密钥（最小安全加固）
 	Conf.EmailSMTPPass = os.Getenv("EMAIL_SMTP_PASS")
-
+	fmt.Println("setting", Conf.EmailSMTPPass)
 	// 开启配置热更新，WatchConfig来监听配置文件
 	viper.WatchConfig()
 	// 使用fsnotify库监控你设置的配置文件，每当配置文件改变后，viper会重新加载配置文件

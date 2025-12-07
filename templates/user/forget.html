@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>找回密码 - 用户中心</title>
+    <style>
+        /* ... 你的原有样式保持不变 ... */
+        .step { display: none; }
+        .step.active { display: block; }
+    </style>
+</head>
+<body>
+<div class="forget-container">
+    <h2>找回密码</h2>
+
+    <!-- 第一阶段：输入账号 -->
+    <div id="step1" class="step active">
+        <form id="accountForm">
+            <div class="input-group" id="accountGroup">
+                <label for="account">注册邮箱</label>
+                <input
+                        type="text"
+                        id="account"
+                        name="account"
+                        placeholder="请输入注册邮箱"
+                        autocomplete="off"
+                />
+                <div class="error-message" id="accountError">请输入有效的邮箱地址</div>
+            </div>
+            <button type="submit" class="submit-btn" id="submitBtn">发送验证码</button>
+            <a href="/user/login" class="back-link">返回登录</a>
+        </form>
+    </div>
+
+    <!-- 第二阶段：输入验证码和新密码 -->
+    <div id="step2" class="step">
+        <form id="verifyForm">
+            <p style="text-align:center; margin-bottom:16px; color:#666;">
+                验证码已发送至：<span id="displayAccount"></span>
+            </p>
+
+            <div class="input-group" id="codeGroup">
+                <label for="code">验证码</label>
+                <input
+                        type="text"
+                        id="code"
+                        name="code"
+                        placeholder="请输入邮箱中的6位验证码"
+                        maxlength="6"
+                        autocomplete="off"
+                />
+                <div class="error-message" id="codeError">验证码错误或已过期</div>
+            </div>
+
+            <div class="input-group" id="passwordGroup">
+                <label for="newPassword">新密码</label>
+                <input
+                        type="password"
+                        id="newPassword"
+                        name="newPassword"
+                        placeholder="请输入新密码（6-20位）"
+                />
+                <div class="error-message" id="passwordError">密码长度需为6-20位</div>
+            </div>
+
+            <div class="input-group" id="confirmGroup">
+                <label for="confirmPassword">确认密码</label>
+                <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="请再次输入新密码"
+                />
+                <div class="error-message" id="confirmError">两次密码不一致</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="verifyBtn">重置密码</button>
+            <button type="button" class="submit-btn" style="background:#909399; margin-top:12px;" onclick="goBack()">
+                返回上一步
+            </button>
+        </form>
+    </div>
+
+    <div class="success-message" id="successMessage" style="margin-top:16px;"></div>
+</div>
+
+<script>
+    // 工具函数：仅校验邮箱
+    function isValidAccount(value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value);
+    }
+
+    function isValidPassword(pwd) {
+        return pwd.length >= 6 && pwd.length <= 20;
+    }
+
+    // DOM
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const displayAccount = document.getElementById('displayAccount');
+
+    // 第一阶段：发送验证码
+    document.getElementById('accountForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const account = document.getElementById('account').value.trim();
+
+        // 只校验邮箱
+        if (!account || !isValidAccount(account)) {
+            document.getElementById('accountGroup').classList.add('error');
+            return;
+        }
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = '发送中...';
+
+        try {
+            const res = await fetch('/user/forget', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ param: account })
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                displayAccount.textContent = account;
+                step1.classList.remove('active');
+                step2.classList.add('active');
+            } else {
+                alert(data.message || '发送失败');
+            }
+        } catch (err) {
+            alert('网络错误');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '发送验证码';
+        }
+    });
+
+    // 第二阶段：验证并重置密码（逻辑不变）
+    document.getElementById('verifyForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const account = displayAccount.textContent;
+        const code = document.getElementById('code').value.trim();
+        const pwd = document.getElementById('newPassword').value;
+        const confirm = document.getElementById('confirmPassword').value;
+
+        let valid = true;
+        if (!code) {
+            document.getElementById('codeGroup').classList.add('error');
+            valid = false;
+        } else {
+            document.getElementById('codeGroup').classList.remove('error');
+        }
+
+        if (!isValidPassword(pwd)) {
+            document.getElementById('passwordGroup').classList.add('error');
+            valid = false;
+        } else {
+            document.getElementById('passwordGroup').classList.remove('error');
+        }
+
+        if (pwd !== confirm) {
+            document.getElementById('confirmGroup').classList.add('error');
+            valid = false;
+        } else {
+            document.getElementById('confirmGroup').classList.remove('error');
+        }
+
+        if (!valid) return;
+
+        const btn = document.getElementById('verifyBtn');
+        btn.disabled = true;
+        btn.textContent = '处理中...';
+
+        try {
+            const res = await fetch('/user/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    account: account,
+                    code: code,
+                    newPassword: pwd
+                })
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                document.getElementById('successMessage').textContent = '密码重置成功！正在跳转...';
+                document.getElementById('successMessage').style.display = 'block';
+                setTimeout(() => window.location.href = '/user/login', 2000);
+            } else {
+                document.getElementById('codeGroup').classList.add('error');
+                alert(data.message || '验证码错误');
+            }
+        } catch (err) {
+            alert('网络错误');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '重置密码';
+        }
+    });
+
+    function goBack() {
+        step2.classList.remove('active');
+        step1.classList.add('active');
+    }
+</script>
+</body>
+</html>

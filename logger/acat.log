@@ -1,117 +1,18 @@
-{"level":"INFO","time":"2025-11-30T17:09:44.430+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T17:09:44.707+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"WARN","time":"2025-11-30T17:12:22.590+0800","caller":"auth/jwt.go:59","msg":"解析 Token 失败","error":"token is malformed: could not JSON decode claim: json: cannot unmarshal string into Go struct field JwtClaims.user_id of type uint","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTAiLCJuYW1lIjoi5byg55qT57-UIiwiaWRlbnRpdHkiOjAsImlzcyI6ImFjYXQiLCJleHAiOjE3NjQ4NDExNDgsImlhdCI6MTc2NDIzNjM0OH0.okTuU00mG9tHcmpYpK0tQ2MgbSozW5--y44EHdUywgU"}
-{"level":"WARN","time":"2025-11-30T17:12:22.590+0800","caller":"middleware/auth.go:40","msg":"HTML 中间件：Token 验证失败","error":"token is malformed: could not JSON decode claim: json: cannot unmarshal string into Go struct field JwtClaims.user_id of type uint"}
-{"level":"INFO","time":"2025-11-30T17:14:48.018+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T17:14:48.070+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T17:59:40.679+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T17:59:40.756+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T18:03:12.886+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T18:03:12.937+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T18:07:29.615+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T18:07:29.668+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:07:13.235+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:07:13.292+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:07:28.704+0800","caller":"controller/admin.go:36","msg":"controller/admin.go AdminLoginHandler failed GetAdmin error : ","error":"Error 1146 (42S02): Table 'acat.admin_views' doesn't exist"}
-{"level":"INFO","time":"2025-11-30T19:09:52.246+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:09:52.299+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:17:18.165+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:17:18.214+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:18:02.163+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:18:02.220+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:20:42.556+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:20:42.618+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:22:09.147+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:22:09.200+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:22:40.201+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:22:40.250+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:24:12.517+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:24:12.565+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T19:24:55.731+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T19:24:55.787+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T21:26:23.464+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T21:26:23.569+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T22:38:08.920+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T22:38:08.976+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T22:39:21.944+0800","caller":"controller/user.go:162","msg":"controller/user.go UpdateHandler() failed shouldBindJSON() error : ","error":"EOF"}
-{"level":"INFO","time":"2025-11-30T22:51:35.658+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T22:51:35.708+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T22:52:11.004+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T22:52:11.079+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T22:52:33.836+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T22:52:33.890+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T22:55:07.065+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T22:55:07.113+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T22:59:08.020+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T22:59:08.073+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T22:59:36.754+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T22:59:36.803+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T23:01:05.573+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T23:01:05.623+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T23:01:31.906+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T23:01:32.020+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-11-30T23:01:34.013+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-11-30T23:01:34.147+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T16:53:43.175+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T16:53:43.225+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T16:59:53.192+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T16:59:53.262+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:06:17.688+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:06:17.749+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:06:28.970+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:06:29.023+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:06:58.829+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:06:58.882+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:08:20.719+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:08:20.768+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:12:34.301+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:12:34.352+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:14:05.910+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:14:05.993+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:17:01.818+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:17:01.875+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:17:19.094+0800","caller":"logic/user.go:245","msg":"logic/user.go failed post error : ","error":"你已预约过该时段，请勿重复提交"}
-{"level":"INFO","time":"2025-12-01T17:18:12.667+0800","caller":"logic/user.go:245","msg":"logic/user.go failed post error : ","error":"你已预约过该时段，请勿重复提交"}
-{"level":"INFO","time":"2025-12-01T17:22:48.880+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:22:48.929+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:33:29.567+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:33:29.629+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T17:41:05.293+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T17:41:05.391+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:03:57.802+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:03:57.892+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:08:31.040+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:08:31.094+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:10:20.392+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:10:20.460+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:10:37.445+0800","caller":"logic/user.go:245","msg":"logic/user.go failed post error : ","error":"你已预约过该时段，请勿重复提交"}
-{"level":"INFO","time":"2025-12-01T18:12:04.591+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:12:04.637+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:12:08.827+0800","caller":"logic/user.go:246","msg":"logic/user.go failed post error : ","error":"你已预约过该时段，请勿重复提交"}
-{"level":"INFO","time":"2025-12-01T18:13:41.133+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:13:41.188+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:16:53.989+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:16:54.045+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:18:24.127+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:18:24.183+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:20:15.644+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:20:15.702+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:28:56.524+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:28:56.582+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:33:30.955+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:33:31.020+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:33:39.300+0800","caller":"logic/user.go:246","msg":"logic/user.go failed post error : ","error":"你已预约过该时段，请勿重复提交"}
-{"level":"INFO","time":"2025-12-01T18:34:44.360+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:34:44.427+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:36:05.203+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:36:05.259+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T18:36:59.523+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T18:36:59.567+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T19:10:35.600+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T19:10:35.649+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T22:10:27.507+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T22:10:27.578+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T22:14:38.871+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
-{"level":"INFO","time":"2025-12-01T22:14:38.920+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
-{"level":"INFO","time":"2025-12-01T22:14:43.042+0800","caller":"logic/user.go:246","msg":"logic/user.go failed post error : ","error":"你已预约过面试，请勿重复提交"}
-{"level":"INFO","time":"2025-12-01T22:14:47.424+0800","caller":"logic/user.go:246","msg":"logic/user.go failed post error : ","error":"你已预约过面试，请勿重复提交"}
+{"level":"INFO","time":"2025-12-07T16:32:10.464+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-12-07T16:32:10.523+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-07T16:32:13.650+0800","caller":"logic/user.go:448","msg":"logic/user.go SendEmailCode failed error : ","error":"535 Login fail. Account is abnormal, service is not open, password is incorrect, login frequency limited, or system is busy. More information at https://help.mail.qq.com/detail/108/1023"}
+{"level":"INFO","time":"2025-12-07T16:33:39.891+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-12-07T16:33:39.962+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-07T16:33:52.737+0800","caller":"logic/user.go:448","msg":"logic/user.go SendEmailCode failed error : ","error":"535 Login fail. Account is abnormal, service is not open, password is incorrect, login frequency limited, or system is busy. More information at https://help.mail.qq.com/detail/108/1023"}
+{"level":"INFO","time":"2025-12-07T16:35:36.835+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-12-07T16:35:36.916+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-07T16:35:47.728+0800","caller":"logic/user.go:448","msg":"logic/user.go SendEmailCode failed error : ","error":"535 Login fail. Account is abnormal, service is not open, password is incorrect, login frequency limited, or system is busy. More information at https://help.mail.qq.com/detail/108/1023"}
+{"level":"INFO","time":"2025-12-07T17:23:18.063+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-12-07T17:23:18.120+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-07T17:23:20.884+0800","caller":"logic/user.go:452","msg":"logic/user.go SendEmailCode failed error : ","error":"535 Login fail. Account is abnormal, service is not open, password is incorrect, login frequency limited, or system is busy. More information at https://help.mail.qq.com/detail/108/1023"}
+{"level":"INFO","time":"2025-12-07T17:27:12.870+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-12-07T17:27:12.921+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-07T17:27:15.656+0800","caller":"logic/user.go:452","msg":"logic/user.go SendEmailCode failed error : ","error":"535 Login fail. Account is abnormal, service is not open, password is incorrect, login frequency limited, or system is busy. More information at https://help.mail.qq.com/detail/108/1023"}
+{"level":"INFO","time":"2025-12-07T17:50:16.387+0800","caller":"ACAT/main.go:27","msg":"日志文件初始化完成"}
+{"level":"INFO","time":"2025-12-07T17:50:16.433+0800","caller":"ACAT/main.go:34","msg":"数据库表同步完成"}
+{"level":"INFO","time":"2025-12-07T17:50:18.671+0800","caller":"logic/user.go:444","msg":"logic/user.go SendEmailCode failed error : ","error":"535 Login fail. Account is abnormal, service is not open, password is incorrect, login frequency limited, or system is busy. More information at https://help.mail.qq.com/detail/108/1023"}

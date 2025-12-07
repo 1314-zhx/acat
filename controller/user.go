@@ -212,9 +212,35 @@ func ShowSlotHandler(c *gin.Context) {
 	c.JSON(200, res)
 }
 func ForgetHandler(c *gin.Context) {
-
+	var forget logic.Forget
+	err := c.ShouldBindJSON(&forget)
+	if err != nil {
+		zap.L().Info("controller/user.go ForgetHandler() failed shouldBindJSON() error : ", zap.Error(err))
+		log.Println("controller/user.go ForgetHandler() failed shouldBindJSON() error : ", err)
+		c.JSON(400, ErrorResponse(err))
+		return
+	}
+	res := forget.Forget()
+	c.JSON(200, res)
 }
-func AccountHandler(c *gin.Context) {}
+func ReSetPasswordHandler(c *gin.Context) {
+	var reset logic.ResetPassword
+	err := c.ShouldBindJSON(&reset)
+	if err != nil {
+		zap.L().Info("controller/user.go ReSetPasswordHandler() failed shouldBindJSON() error : ", zap.Error(err))
+		log.Println("controller/user.go ReSetPasswordHandler() failed shouldBindJSON() error : ", err)
+		c.JSON(400, ErrorResponse(err))
+		return
+	}
+	res := reset.ResetPassword(c.Request.Context())
+	c.JSON(200, res)
+}
+func LoginOutHandler(c *gin.Context) {
+	secure := setting.Conf.WebMode == "release"
+	// 后端发送过期cookie，将浏览器有效的cookie替换掉
+	c.SetCookie("token", "", -1, "/user", "", secure, true)
+	c.Redirect(http.StatusFound, "/user/center")
+}
 
 // 渲染
 func ShowLoginHandler(c *gin.Context) {

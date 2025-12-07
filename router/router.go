@@ -51,6 +51,10 @@ func NewRouter() *gin.Engine {
 			c.HTML(200, "register.html", nil)
 		})
 		userRouter.POST("/forget", controller.ForgetHandler)
+		userRouter.GET("/forget", func(c *gin.Context) {
+			c.HTML(200, "forget.html", nil)
+		})
+		userRouter.POST("/reset-password", controller.ReSetPasswordHandler)
 		// 用户登录
 		userRouter.POST("/login", controller.LoginHandler)
 		userRouter.GET("/login", controller.ShowLoginHandler)
@@ -82,7 +86,8 @@ func NewRouter() *gin.Engine {
 				c.HTML(200, "update.html", nil)
 			})
 			// 用户个人中心
-			authed.GET("/account", controller.AccountHandler)
+			authed.GET("/logout", controller.LoginOutHandler)
+
 		}
 	}
 	// 管理员登录

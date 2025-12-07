@@ -80,6 +80,24 @@ func (dao *UserDao) Create(register *model.UserRegister) error {
 	}
 	return dao.db.Create(&user).Error
 }
+func (dao *UserDao) GetUserByEmail(email string, ctx context.Context) (*model.UserModel, error) {
+	var user model.UserModel
+	err := dao.db.WithContext(ctx).Where("email = ?", email).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("user not found")
+		}
+		return nil, err
+	}
+	return &user, nil
+}
+func (dao *UserDao) ResetPassword(ctx context.Context, userID uint, hashedPassword string) error {
+	err := dao.db.WithContext(ctx).
+		Model(&model.UserModel{}).
+		Where("id = ?", userID).
+		Update("password", hashedPassword).Error
+	return err
+}
 func (dao *UserDao) Result(uid uint, round int, ctx context.Context) (int, error) {
 	var userResult model.InterviewResult
 	err := dao.db.WithContext(ctx).Where("id = ? and round = ?", uid, round).First(&userResult).Error
@@ -223,10 +241,10 @@ func (dao *UserDao) Delete(uid uint) error {
 	return tx.Commit().Error
 }
 func (dao *UserDao) Update(uid uint, newSlotID uint, name string, direction int) error {
+
 	if uid == 0 || newSlotID == 0 {
 		return errors.New("无效的用户ID或时段ID")
 	}
-
 	tx := dao.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -240,11 +258,6 @@ func (dao *UserDao) Update(uid uint, newSlotID uint, name string, direction int)
 		return fmt.Errorf("未找到您的预约记录: %w", err)
 	}
 
-	if ia.SlotID == newSlotID {
-		tx.Rollback()
-		return nil // 无需更新
-	}
-
 	oldSlotID := ia.SlotID
 
 	// 1. 旧 slot 减 1
@@ -255,11 +268,11 @@ func (dao *UserDao) Update(uid uint, newSlotID uint, name string, direction int)
 		tx.Rollback()
 		return fmt.Errorf("释放原时段名额失败: %w", resDec.Error)
 	}
+
 	if resDec.RowsAffected == 0 {
 		tx.Rollback()
 		return errors.New("原面试时段人数异常，无法释放名额")
 	}
-
 	// 2. 新 slot 加 1
 	resInc := tx.Model(&model.InterviewSlot{}).
 		Where("id = ? AND num < max_num", newSlotID).
@@ -269,6 +282,7 @@ func (dao *UserDao) Update(uid uint, newSlotID uint, name string, direction int)
 		tx.Rollback()
 		return fmt.Errorf("目标时段已满或不可用: %w", resInc.Error)
 	}
+
 	if resInc.RowsAffected == 0 {
 		// 同样需要回滚旧 slot
 		tx.Model(&model.InterviewSlot{}).Where("id = ?", oldSlotID).Update("num", gorm.Expr("num + 1"))
