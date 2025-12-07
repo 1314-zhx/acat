@@ -5,14 +5,14 @@ var mapMsg = map[int]string{
 	Success: "成功",
 	Error:   "失败",
 	// 用户
-	InvalidParam:         "无效参数-用户登录",
-	PhoneOrPasswordError: "手机号或密码错误-用户登录",
-	InvalidPhoneForm:     "手机号格式错误-用户登录",
-	VCodeError:           "验证码错误-用户登录",
+	InvalidParam:         "无效参数",
+	PhoneOrPasswordError: "手机号或密码错误",
+	InvalidPhoneForm:     "手机号格式错误",
+	VCodeError:           "验证码错误",
 
-	NameExists:                "名字已存在-用户注册",
-	PhoneExists:               "手机号已存在-用户注册",
-	EmailFormError:            "邮箱格式不正确-用户注册",
+	NameExists:                "名字已存在",
+	PhoneExists:               "手机号已存在",
+	EmailFormError:            "邮箱格式不正确",
 	PasswordUnequalRePassword: "密码与第二次不一样",
 
 	MissMustInfo: "缺少必需字段",

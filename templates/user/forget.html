@@ -5,9 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>找回密码 - 用户中心</title>
     <style>
-        /* ... 你的原有样式保持不变 ... */
-        .step { display: none; }
-        .step.active { display: block; }
+        /* 原有样式保持不变 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .forget-container {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .forget-container h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #409eff;
+        }
+
+        .input-group.error input {
+            border-color: #f56c6c;
+        }
+
+        .error-message {
+            color: #f56c6c;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .input-group.error .error-message {
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #409eff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background-color: #53a8ff;
+        }
+
+        .submit-btn:disabled {
+            background-color: #a0cfff;
+            cursor: not-allowed;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            color: #409eff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            color: #67c23a;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -36,6 +152,9 @@
     <!-- 第二阶段：输入验证码和新密码 -->
     <div id="step2" class="step">
         <form id="verifyForm">
+            <!-- 🔒 关键：用 hidden input 存储邮箱，不依赖 span.textContent -->
+            <input type="hidden" id="storedAccount" value="" />
+
             <p style="text-align:center; margin-bottom:16px; color:#666;">
                 验证码已发送至：<span id="displayAccount"></span>
             </p>
@@ -82,11 +201,10 @@
         </form>
     </div>
 
-    <div class="success-message" id="successMessage" style="margin-top:16px;"></div>
+    <div class="success-message" id="successMessage"></div>
 </div>
 
 <script>
-    // 工具函数：仅校验邮箱
     function isValidAccount(value) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(value);
@@ -96,17 +214,16 @@
         return pwd.length >= 6 && pwd.length <= 20;
     }
 
-    // DOM
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
     const displayAccount = document.getElementById('displayAccount');
+    const storedAccountInput = document.getElementById('storedAccount');
 
     // 第一阶段：发送验证码
     document.getElementById('accountForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const account = document.getElementById('account').value.trim();
 
-        // 只校验邮箱
         if (!account || !isValidAccount(account)) {
             document.getElementById('accountGroup').classList.add('error');
             return;
@@ -124,53 +241,64 @@
             });
             const data = await res.json();
 
-            if (res.ok && data.success) {
+            if (res.ok && data.status === 200) {
+                // ✅ 同时更新显示文本和隐藏字段
                 displayAccount.textContent = account;
+                storedAccountInput.value = account; // 👈 关键：存到 hidden input
                 step1.classList.remove('active');
                 step2.classList.add('active');
             } else {
-                alert(data.message || '发送失败');
+                alert(data.msg || '发送失败，请稍后重试');
             }
         } catch (err) {
-            alert('网络错误');
+            console.error('发送验证码出错:', err);
+            alert('网络错误，请检查连接');
         } finally {
             btn.disabled = false;
             btn.textContent = '发送验证码';
         }
     });
 
-    // 第二阶段：验证并重置密码（逻辑不变）
+    // 第二阶段：验证并重置密码
     document.getElementById('verifyForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const account = displayAccount.textContent;
+        // ✅ 从 hidden input 读取邮箱（不受插件干扰）
+        let account = storedAccountInput.value.trim();
         const code = document.getElementById('code').value.trim();
         const pwd = document.getElementById('newPassword').value;
         const confirm = document.getElementById('confirmPassword').value;
 
-        let valid = true;
+        // 🔍 调试日志（上线可注释）
+        console.log("【提交数据】", {
+            account: JSON.stringify(account),
+            code: JSON.stringify(code),
+            pwdLen: pwd.length,
+            confirmLen: confirm.length
+        });
+
+        // 强制非空校验
+        if (!account) {
+            alert("邮箱信息丢失，请重新操作");
+            return;
+        }
         if (!code) {
             document.getElementById('codeGroup').classList.add('error');
-            valid = false;
-        } else {
-            document.getElementById('codeGroup').classList.remove('error');
+            return;
         }
-
         if (!isValidPassword(pwd)) {
             document.getElementById('passwordGroup').classList.add('error');
-            valid = false;
-        } else {
-            document.getElementById('passwordGroup').classList.remove('error');
+            return;
         }
-
         if (pwd !== confirm) {
             document.getElementById('confirmGroup').classList.add('error');
-            valid = false;
-        } else {
-            document.getElementById('confirmGroup').classList.remove('error');
+            return;
         }
 
-        if (!valid) return;
+        // 清除错误状态
+        document.getElementById('codeGroup').classList.remove('error');
+        document.getElementById('passwordGroup').classList.remove('error');
+        document.getElementById('confirmGroup').classList.remove('error');
 
         const btn = document.getElementById('verifyBtn');
         btn.disabled = true;
@@ -183,21 +311,25 @@
                 body: JSON.stringify({
                     account: account,
                     code: code,
-                    newPassword: pwd
+                    new_password: pwd
                 })
             });
             const data = await res.json();
 
-            if (res.ok && data.success) {
+            if (res.ok && data.status === 200) {
                 document.getElementById('successMessage').textContent = '密码重置成功！正在跳转...';
-                document.getElementById('successMessage').style.display = 'block';
                 setTimeout(() => window.location.href = '/user/login', 2000);
             } else {
-                document.getElementById('codeGroup').classList.add('error');
-                alert(data.message || '验证码错误');
+                // 根据后端 msg 精准提示
+                alert(data.msg || '操作失败，请重试');
+                // 只有验证码相关错误才高亮验证码框
+                if (data.msg && (data.msg.includes('验证码') || data.msg.includes('code'))) {
+                    document.getElementById('codeGroup').classList.add('error');
+                }
             }
         } catch (err) {
-            alert('网络错误');
+            console.error('重置密码出错:', err);
+            alert('网络错误，请检查连接');
         } finally {
             btn.disabled = false;
             btn.textContent = '重置密码';

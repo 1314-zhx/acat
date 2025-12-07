@@ -26,7 +26,7 @@ func SendEmailCode(to, code string) error {
 	m.SetHeader("Subject", "【ACAT纳新系统】密码重置验证码")
 	m.SetBody("text/plain", fmt.Sprintf("您的验证码是：%s，5分钟内有效。", code))
 
-	d := gomail.NewDialer(setting.Conf.EmailSMTPHost, 587, setting.Conf.EmailValidEmail, setting.Conf.EmailSMTPPass)
+	d := gomail.NewDialer(setting.Conf.EmailSMTPHost, 587, setting.Conf.EmailSMTPEmail, setting.Conf.EmailSMTPPass)
 	fmt.Println(setting.Conf.EmailSMTPHost, 587, setting.Conf.EmailSMTPEmail, setting.Conf.EmailSMTPPass)
 	return d.DialAndSend(m)
 }

@@ -226,6 +226,7 @@ func ForgetHandler(c *gin.Context) {
 func ReSetPasswordHandler(c *gin.Context) {
 	var reset logic.ResetPassword
 	err := c.ShouldBindJSON(&reset)
+	fmt.Println("reset ", reset)
 	if err != nil {
 		zap.L().Info("controller/user.go ReSetPasswordHandler() failed shouldBindJSON() error : ", zap.Error(err))
 		log.Println("controller/user.go ReSetPasswordHandler() failed shouldBindJSON() error : ", err)

@@ -475,6 +475,7 @@ type ResetPassword struct {
 
 func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	co := code.Success
+	fmt.Println("lose param")
 	// 1. 参数校验
 	if r.Account == "" || r.Code == "" || r.NewPassword == "" {
 		return serializer.Response{
@@ -483,7 +484,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 			Error:  "缺少必要参数",
 		}
 	}
-
+	fmt.Println("build key error")
 	// 2. 构造 Redis key（和 Forget 里完全一致！）
 	var key string
 	if util.IsEmail(r.Account) {
@@ -495,7 +496,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 			Error:  "请使用注册邮箱",
 		}
 	}
-
+	fmt.Println("get key error")
 	// 3. 从 Redis 读取验证码
 	storedCode, err := redislock.GetRDB().Get(ctx, key).Result()
 	if err != nil {
@@ -513,16 +514,16 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 			Error:  "内部错误",
 		}
 	}
-
+	fmt.Println("here ", storedCode, r.Code)
 	// 4. 验证码比对
 	if storedCode != r.Code {
+		fmt.Println("error equal")
 		return serializer.Response{
 			Status: code.Error,
 			Msg:    "验证码错误",
 			Error:  "验证码不匹配",
 		}
 	}
-
 	// 5. 查找用户（通过 account）
 	userDao := dao.NewUserDao(db.DB)
 	var user *model.UserModel
