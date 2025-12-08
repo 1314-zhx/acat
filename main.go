@@ -10,7 +10,6 @@ import (
 	"acat/router"
 	"acat/setting"
 	"fmt"
-	"go.uber.org/zap"
 	"log"
 )
 
@@ -24,13 +23,11 @@ func main() {
 	if err := logger.Init(setting.Conf.LogConf, "dev"); err != nil {
 		log.Println("[INFO] log file db failed && WHERE main.go ,error : ", err)
 	}
-	zap.L().Info("日志文件初始化完成")
 	// 初始化mysql数据库
 	if err := db.InitDB(); err != nil {
 		log.Fatal("[PANIC] in main db.InitDB() failed , error: ", err)
 	}
 	// 初始化全局唯一redis实例，默认没有错误
 	redislock.Init(setting.Conf.RedisHost+":"+setting.Conf.RedisPort, setting.Conf.RedisDb, setting.Conf.RedisPoolSize)
-	zap.L().Info("数据库表同步完成")
 	_ = r.Run(fmt.Sprintf(":%s", setting.Conf.WebPort))
 }

@@ -340,3 +340,72 @@ func (dao *UserDao) GetUserCurrentValidSlotID(uid uint) (uint, error) {
 	fmt.Println("dao : ", validSlotID)
 	return validSlotID, nil
 }
+func (dao *UserDao) UpdatePass(uid uint, round int, pass int, adminId uint) error {
+	var err error
+
+	// 开启事务
+	err = dao.db.Transaction(func(tx *gorm.DB) error {
+		// 表示事务内部错误
+		var innerErr error
+		field := ""
+		if round == 1 {
+			field = "first_pass"
+		} else if round == 2 {
+			field = "second_pass"
+		}
+
+		//  更新用户状态
+		result := tx.Model(&model.UserModel{}).
+			Where("id = ?", uid).
+			Update(field, pass)
+
+		if result.Error != nil {
+			innerErr = result.Error
+			return innerErr
+		}
+		if result.RowsAffected == 0 {
+			innerErr = gorm.ErrRecordNotFound
+			return innerErr
+		}
+
+		// 如果通过，创建面试结果记录
+		if pass == 1 {
+			interviewResult := model.InterviewResult{
+				UserID:  uid,
+				Round:   round,
+				Status:  1,
+				AdminID: adminId,
+			}
+			innerErr = tx.Create(&interviewResult).Error
+			if innerErr != nil {
+				return innerErr
+			}
+		}
+
+		return nil // 事务成功
+	})
+
+	return err
+}
+func (dao *UserDao) GetUsersByRound(round int) ([]model.UserResponse, error) {
+	var users []model.UserModel
+	var err error
+	var usersRes []model.UserResponse
+	if round == 1 {
+		err = dao.db.Where("first_pass = ?", 1).Find(&users).Error
+	} else {
+		err = dao.db.Where("second_pass = ?", 1).Find(&users).Error
+	}
+	if err != nil {
+		return nil, err
+	}
+	for _, user := range users {
+		userRes := model.UserResponse{
+			Name:  user.Name,
+			Email: user.Email,
+			ID:    user.ID,
+		}
+		usersRes = append(usersRes, userRes)
+	}
+	return usersRes, nil
+}

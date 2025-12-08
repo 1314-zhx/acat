@@ -242,6 +242,9 @@ func LoginOutHandler(c *gin.Context) {
 	c.SetCookie("token", "", -1, "/user", "", secure, true)
 	c.Redirect(http.StatusFound, "/user/center")
 }
+func DownloadHandler(c *gin.Context) {
+
+}
 
 // 渲染
 func ShowLoginHandler(c *gin.Context) {

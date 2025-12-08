@@ -8,10 +8,13 @@ import (
 	"acat/model/code"
 	"acat/setting"
 	"acat/util/auth"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"log"
+	"net/http"
 )
 
 func AdminLoginHandler(c *gin.Context) {
@@ -52,11 +55,90 @@ func AdminLoginHandler(c *gin.Context) {
 }
 
 func AdminSetScheduleHandler(c *gin.Context) {
-	//TODO:
+	var setSlot logic.SetSlot
+	err := c.ShouldBindJSON(&setSlot)
+	if err != nil {
+		zap.L().Info("controller/admin.go AdminSetScheduleHandler failed shouldBindJSON error : ", zap.Error(err))
+		log.Println("controller/admin.go AdminSetScheduleHandler failed shouldBindJSON error : ", err)
+		c.JSON(400, ErrorResponse(errors.New("ShouldBindJSON error")))
+		return
+	}
+	res := setSlot.SetSchedule()
+	c.JSON(http.StatusOK, res)
 }
 func AdminSetInterviewResultHandler(c *gin.Context) {
-	//TODO:
+	var setResult logic.SetResult
+	err := c.ShouldBindJSON(&setResult)
+	if err != nil {
+		zap.L().Info("controller/admin.go AdminSetInterviewResultHandler failed shouldBindJSON error : ", zap.Error(err))
+		log.Println("controller/admin.go AdminSetInterviewResultHandler failed shouldBindJSON error : ", err)
+		c.JSON(400, ErrorResponse(errors.New("ShouldBindJSON error")))
+		return
+	}
+	res := setResult.SetUserResult(c.Request.Context())
+	c.JSON(200, res)
 }
-func AdminPostEmailHandler(c *gin.Context) {
-	//TODO:
+func SetPassHandler(c *gin.Context) {
+	var setPass logic.SetPass
+	err := c.ShouldBindJSON(&setPass)
+	rawClaims, exists := c.Get("claims")
+	if !exists {
+		err := errors.New("认证信息缺失")
+		zap.L().Warn("ResultHandler: claims 不存在", zap.Error(err))
+		c.JSON(400, ErrorResponse(err))
+		return
+	}
+	// 类型断言
+	claims, ok := rawClaims.(*auth.JwtClaims)
+	if !ok {
+		err := errors.New("claims 类型错误")
+		zap.L().Error("ResultHandler: claims 类型异常", zap.Error(err))
+		c.JSON(400, ErrorResponse(err))
+		return
+	}
+	if err != nil {
+		zap.L().Info("controller/admin.go SetPassHandler failed shouldBindJSON error : ", zap.Error(err))
+		log.Println("controller/admin.go SetPassHandler failed shouldBindJSON error : ", err)
+		c.JSON(400, ErrorResponse(errors.New("ShouldBindJSON error")))
+		return
+	}
+	res := setPass.SetUserPass(claims.UserID)
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+	}
+	c.JSON(200, res)
+}
+
+// 管理员公布面试结果
+func AdminPublishHandler(c *gin.Context) {
+	var passUser logic.PassUser
+	err := c.ShouldBindJSON(&passUser)
+	if err != nil {
+		zap.L().Info("logic/admin.go AdminPublishHandler failed shouldBindJSON error : ", zap.Error(err))
+		log.Println("logic/admin.go AdminPublishHandler failed shouldBindJSON error : ", err)
+		c.JSON(400, ErrorResponse(errors.New("ShouldBindJSON error")))
+		return
+	}
+	res := passUser.Publish()
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New("AdminPublishHandler logic error")))
+	}
+	data, err := json.Marshal(res)
+	fmt.Println(string(data))
+	c.JSON(200, res)
+}
+func GetPassUserHandler(c *gin.Context) {
+	var round logic.PublishRound
+	err := c.ShouldBindJSON(&round)
+	if err != nil {
+		zap.L().Info("logic/admin.go GetPassUserHandler failed shouldBindJSON error : ", zap.Error(err))
+		log.Println("logic/admin.go GetPassUserHandler failed shouldBindJSON error : ", err)
+		c.JSON(400, ErrorResponse(errors.New("ShouldBindJSON error")))
+		return
+	}
+	res := round.GetPassUser()
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New("GetPassUser logic error")))
+	}
+	c.JSON(200, res)
 }

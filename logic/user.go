@@ -99,7 +99,7 @@ type UserRes struct {
 func (r *UserRes) Register() serializer.Response {
 	co := code.Success
 	// 检验必填参数
-	if r.Phone == "" || r.Password == "" || r.RePassword == "" || r.StuId == "" || r.Name == "" || r.Gender == 0 {
+	if r.Phone == "" || r.Password == "" || r.RePassword == "" || r.StuId == "" || r.Name == "" || r.Gender == 0 || r.Email == "" {
 		co = code.MissMustInfo
 		zap.L().Info("logic/user.go Register() failed miss must info : ", zap.Error(errors.New(code.GetMsg(co))))
 		log.Println("logic/user.go Register() failed miss must info : ", errors.New(code.GetMsg(co)))

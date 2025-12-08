@@ -58,6 +58,8 @@ func NewRouter() *gin.Engine {
 		// 用户登录
 		userRouter.POST("/login", controller.LoginHandler)
 		userRouter.GET("/login", controller.ShowLoginHandler)
+		// 用户下载电子版试题
+		userRouter.POST("/download", controller.DownloadHandler)
 		authed := userRouter.Group("/auth")
 		authed.Use(middleware.AuthUserHTML())
 		{
@@ -104,11 +106,22 @@ func NewRouter() *gin.Engine {
 			c.HTML(200, "admin_center.html", nil)
 		})
 		// 管理员设置面试表
-		adminRouter.POST("/settimetable", controller.AdminSetScheduleHandler)
+		adminRouter.POST("/set_schedule", controller.AdminSetScheduleHandler)
+		adminRouter.GET("/set_schedule", func(c *gin.Context) {
+			c.HTML(200, "set_schedule.html", nil)
+		})
 		// 管理员设置面试结果
-		adminRouter.POST("/setresult", controller.AdminSetInterviewResultHandler)
-		// 管理员发邮件(短信和QQ邮箱和一块)
-		adminRouter.POST("/postemail", controller.AdminPostEmailHandler)
+		adminRouter.POST("/set_result", controller.AdminSetInterviewResultHandler)
+		adminRouter.GET("/set_result", func(c *gin.Context) {
+			c.HTML(200, "set_result.html", nil)
+		})
+		adminRouter.POST("/set_pass", controller.SetPassHandler)
+		// 管理员发邮件，公布面试结果(QQ邮箱和一块)
+		adminRouter.POST("/post_email", controller.AdminPublishHandler)
+		adminRouter.POST("/get_pass_user", controller.GetPassUserHandler)
+		adminRouter.GET("/post_email", func(c *gin.Context) {
+			c.HTML(200, "publish_email.html", nil)
+		})
 		// 管理员查看收件箱并回信
 		adminRouter.POST("/letter", controller.LetterHandler)
 	}

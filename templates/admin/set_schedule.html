@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>面试时间段设置</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      color: #333;
+      text-align: center;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 15px auto;
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+    }
+    td:first-child {
+      width: 40%;
+      font-weight: bold;
+      background-color: #fafafa;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .button-group {
+      text-align: center;
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #submitBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #clearBtn {
+      background-color: #f44336;
+      color: white;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      margin: 20px auto;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.4;
+      max-width: 500px;
+      text-align: left;
+    }
+    #message {
+      text-align: center;
+      margin-top: 10px;
+      min-height: 24px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>设置面试时间段</h2>
+
+<table id="inputTable">
+  <tr>
+    <td>开始时间 (start_time)</td>
+    <td><input type="datetime-local" id="start_time"></td>
+  </tr>
+  <tr>
+    <td>结束时间 (end_time)</td>
+    <td><input type="datetime-local" id="end_time"></td>
+  </tr>
+  <tr>
+    <td>轮次 (round)</td>
+    <td>
+      <select id="round">
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>最大人数 (max_num)</td>
+    <td><input type="number" id="max_num" min="1" max="50" value="10"></td>
+  </tr>
+</table>
+
+<div class="button-group">
+  <button id="submitBtn">提交</button>
+  <button id="clearBtn">清空</button>
+</div>
+
+<div id="message"></div>
+
+<h3 style="text-align: center;">当前 JSON 数据：</h3>
+<pre id="jsonOutput">{
+  "start_time": "",
+  "end_time": "",
+  "round": 1,
+  "max_num": 10
+}</pre>
+
+<script>
+  // 获取所有输入元素
+  const startTimeInput = document.getElementById('start_time');
+  const endTimeInput = document.getElementById('end_time');
+  const roundSelect = document.getElementById('round');
+  const maxNumInput = document.getElementById('max_num');
+  const jsonOutput = document.getElementById('jsonOutput');
+  const submitBtn = document.getElementById('submitBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const messageDiv = document.getElementById('message');
+
+  // 更新 JSON 显示
+  function updateJSON() {
+    const data = {
+      start_time: startTimeInput.value,
+      end_time: endTimeInput.value,
+      round: parseInt(roundSelect.value, 10),
+      max_num: parseInt(maxNumInput.value, 10) || 10
+    };
+    jsonOutput.textContent = JSON.stringify(data, null, 2);
+  }
+
+  // 提交数据
+  async function handleSubmit() {
+    const data = {
+      start_time: startTimeInput.value,
+      end_time: endTimeInput.value,
+      round: parseInt(roundSelect.value, 10),
+      max_num: parseInt(maxNumInput.value, 10)
+    };
+
+    // 简单校验
+    if (!data.start_time || !data.end_time) {
+      showMessage("请填写开始时间和结束时间", "error");
+      return;
+    }
+    if (data.max_num < 1 || data.max_num > 50) {
+      showMessage("最大人数需在 1~50 之间", "error");
+      return;
+    }
+
+    try {
+      const response = await fetch('/admin/set_schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        showMessage("✅ 提交成功！", "success");
+      } else {
+        const err = await response.json().catch(() => ({}));
+        showMessage(`❌ 提交失败: ${err.error || '未知错误'}`, "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showMessage("❌ 网络错误，请确保后端正在运行", "error");
+    }
+  }
+
+  // 清空表单
+  function handleClear() {
+    startTimeInput.value = '';
+    endTimeInput.value = '';
+    roundSelect.value = '1';
+    maxNumInput.value = '10';
+    updateJSON();
+    messageDiv.textContent = '';
+  }
+
+  // 显示消息
+  function showMessage(text, type) {
+    messageDiv.textContent = text;
+    messageDiv.style.color = type === 'success' ? 'green' : 'red';
+  }
+
+  // 事件绑定
+  startTimeInput.addEventListener('input', updateJSON);
+  endTimeInput.addEventListener('input', updateJSON);
+  roundSelect.addEventListener('change', updateJSON);
+  maxNumInput.addEventListener('input', updateJSON);
+
+  submitBtn.addEventListener('click', handleSubmit);
+  clearBtn.addEventListener('click', handleClear);
+
+  // 初始化 JSON 显示
+  updateJSON();
+</script>
+
+</body>
+</html>

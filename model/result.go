@@ -7,7 +7,7 @@ type InterviewResult struct {
 	ID        uint      `gorm:"primaryKey;autoIncrement"`
 	UserID    uint      `gorm:"not null;index"` // 关联用户（注意：GORM 外键默认是 UserID）
 	Round     int       `gorm:"not null;index"`
-	Status    int       `gorm:"not null;default:0"` // 0=未面试, 1=通过, 2=不通过, 3=待定
+	Status    int       `gorm:"not null;default:0"` // 1=通过, 0=不通过
 	Comment   string    `gorm:"type:text"`
 	AdminID   uint      `gorm:"index"` // 评分管理员ID
 	CreatedAt time.Time `gorm:"autoCreateTime"`

@@ -8,10 +8,10 @@ import (
 // UserModel 用户通用模型 对应user_models表
 type UserModel struct {
 	ID         uint           `json:"id" gorm:"primaryKey;autoIncrement"`
-	StuId      string         `json:"stu_id" gorm:"type:varchar(32);uniqueIndex;not null"` // 修改这里
+	StuId      string         `json:"stu_id" gorm:"type:varchar(32);uniqueIndex;not null"`
 	Name       string         `json:"name" gorm:"type:varchar(64);not null"`
-	Password   string         `json:"-" gorm:"type:varchar(255);not null"`                // bcrypt hash 约 60 字符
-	Phone      string         `json:"phone" gorm:"type:varchar(32);uniqueIndex;not null"` //  修改这里
+	Password   string         `json:"-" gorm:"type:varchar(255);not null"` // bcrypt hash 约 60 字符
+	Phone      string         `json:"phone" gorm:"type:varchar(32);uniqueIndex;not null"`
 	Email      string         `json:"email" gorm:"type:varchar(128);not null"`
 	FirstPass  int            `json:"first_pass" gorm:"not null;default:0"`
 	SecondPass int            `json:"second_pass" gorm:"not null;default:0"`
@@ -52,4 +52,5 @@ type UserResponse struct {
 	StuId  string `json:"stu_id"`          // 学号
 	Phone  string `json:"phone,omitempty"` // 手机号
 	Gender int    `json:"gender"`          // 性别 1 女，2 男
+	Email  string `json:"email"`
 }
