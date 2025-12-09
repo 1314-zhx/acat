@@ -78,6 +78,9 @@ func NewRouter() *gin.Engine {
 			authed.GET("/conversation", func(c *gin.Context) {
 				c.HTML(200, "message.html", nil)
 			})
+			// 用户查看回信
+			//TODO:
+			authed.POST("/check_reply", controller.CheckReplyHandler)
 			// 展示管理员列表
 			authed.GET("/show_admin", controller.ShowAdminHandler)
 
@@ -123,7 +126,11 @@ func NewRouter() *gin.Engine {
 			c.HTML(200, "publish_email.html", nil)
 		})
 		// 管理员查看收件箱并回信
-		adminRouter.POST("/letter", controller.LetterHandler)
+		adminRouter.POST("/mailbox", controller.AdminLetterHandler)
+		adminRouter.POST("/reply", controller.AdminReplyHandler)
+		adminRouter.GET("/mailbox", func(c *gin.Context) {
+			c.HTML(200, "admin_check_reply_letter.html", nil)
+		})
 	}
 	r.NoRoute(controller.Norouter)
 	return r

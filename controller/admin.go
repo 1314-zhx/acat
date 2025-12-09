@@ -123,8 +123,6 @@ func AdminPublishHandler(c *gin.Context) {
 	if res.Error != "" {
 		c.JSON(400, ErrorResponse(errors.New("AdminPublishHandler logic error")))
 	}
-	data, err := json.Marshal(res)
-	fmt.Println(string(data))
 	c.JSON(200, res)
 }
 func GetPassUserHandler(c *gin.Context) {
@@ -140,5 +138,48 @@ func GetPassUserHandler(c *gin.Context) {
 	if res.Error != "" {
 		c.JSON(400, ErrorResponse(errors.New("GetPassUser logic error")))
 	}
+	c.JSON(200, res)
+}
+
+func AdminLetterHandler(c *gin.Context) {
+	var adminLetter logic.AdminLetter
+	rawClaims, exists := c.Get("claims")
+	if !exists {
+		err := errors.New("认证信息缺失")
+		zap.L().Warn("ResultHandler: claims 不存在", zap.Error(err))
+		c.JSON(400, ErrorResponse(err))
+		return
+	}
+	// 类型断言
+	claims, ok := rawClaims.(*auth.JwtClaims)
+	if !ok {
+		err := errors.New("claims 类型错误")
+		zap.L().Error("ResultHandler: claims 类型异常", zap.Error(err))
+		c.JSON(400, ErrorResponse(err))
+		return
+	}
+	res := adminLetter.Letter(claims.UserID)
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New("管理员查看信件失败")))
+	}
+	data, _ := json.Marshal(res)
+	fmt.Println(string(data))
+	c.JSON(200, res)
+}
+func AdminReplyHandler(c *gin.Context) {
+	var reply logic.AdminReply
+	err := c.ShouldBindJSON(&reply)
+	if err != nil {
+		zap.L().Info("logic/admin.go AdminReplyHandler failed shouldBindJSON error : ", zap.Error(err))
+		log.Println("logic/admin.go AdminReplyHandler failed shouldBindJSON error : ", err)
+		c.JSON(400, ErrorResponse(errors.New("ShouldBindJSON error")))
+		return
+	}
+	res := reply.Reply()
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+	}
+	data, _ := json.Marshal(res)
+	fmt.Println(string(data))
 	c.JSON(200, res)
 }

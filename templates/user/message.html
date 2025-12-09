@@ -195,7 +195,7 @@
         try {
             const response = await fetch('/user/auth/show_admin', {
                 method: 'GET',
-                credentials: 'include' // 如果使用 cookie 认证（如 Gin session），必须加这行！
+                credentials: 'include'
             });
 
             if (!response.ok) {
@@ -204,7 +204,6 @@
 
             const result = await response.json();
 
-            // 假设你的响应格式为 { status: 200, data: [...], msg: "成功" }
             if (result.status === 200 && Array.isArray(result.data)) {
                 renderAdmins(result.data);
             } else {
@@ -216,7 +215,6 @@
         }
     }
 
-    // 渲染管理员列表
     function renderAdmins(admins) {
         const container = document.getElementById('adminList');
         if (!admins || admins.length === 0) {
@@ -238,7 +236,6 @@
         `).join('');
     }
 
-    // 打开私信模态框
     function openMessageModal(adminId) {
         document.getElementById('receiveId').value = adminId;
         document.getElementById('title').value = "发给管理员的消息";
@@ -247,18 +244,15 @@
         document.getElementById('messageModal').style.display = 'block';
     }
 
-    // 关闭模态框
     function closeModal() {
         document.getElementById('messageModal').style.display = 'none';
     }
 
-    // 更新字数统计
     function updateCharCount() {
         const content = document.getElementById('content').value;
         document.getElementById('charCount').textContent = content.length;
     }
 
-    // 表单提交处理
     document.getElementById('messageForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -266,7 +260,6 @@
         const title = document.getElementById('title').value.trim();
         const content = document.getElementById('content').value.trim();
 
-        // 校验
         if (!title) {
             alert("标题不能为空");
             return;
@@ -285,18 +278,27 @@
         }
 
         try {
-            const response = await fetch('/user/auth/letter', {
+            // ✅ 修正：使用正确的后端 API 路径 /user/auth/conversation
+            const response = await fetch('/user/auth/conversation', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include', // 同样，如果需要认证
+                credentials: 'include',
                 body: JSON.stringify({
                     receive_id: receiveId,
                     title: title,
                     content: content
                 })
             });
+
+            // 🔍 防御性检查：确保返回的是 JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                const text = await response.text();
+                console.error("服务器返回非JSON内容:", text.substring(0, 200));
+                throw new Error("服务器返回异常，请确认已登录");
+            }
 
             const data = await response.json();
             if (response.ok && data.status === 200) {
@@ -311,10 +313,8 @@
         }
     });
 
-    // 实时字数统计
     document.getElementById('content').addEventListener('input', updateCharCount);
 
-    // 点击模态框外部关闭
     window.onclick = function(event) {
         const modal = document.getElementById('messageModal');
         if (event.target === modal) {
@@ -322,7 +322,6 @@
         }
     };
 
-    // ✅ 页面加载时自动请求管理员列表
     document.addEventListener('DOMContentLoaded', () => {
         loadAdmins();
     });

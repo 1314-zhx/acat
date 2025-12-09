@@ -313,3 +313,70 @@ func (p *PublishRound) GetPassUser() serializer.Response {
 		Data:   users,
 	}
 }
+
+//----------->管理员查看邮箱并回信<------------//
+type AdminLetter struct {
+}
+
+func (a *AdminLetter) Letter(aid uint) serializer.Response {
+	co := code.Success
+	letterDao := dao.NewLetterDao(db.DB)
+	letters, err := letterDao.GetAdminLetters(aid)
+	if err != nil {
+		co = code.Error
+		zap.L().Info("logic/admin.go letter get error : ", zap.Error(err))
+		log.Println("logic/admin.go letter get error : ", err)
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "获取信件失败",
+		}
+	}
+	return serializer.Response{
+		Status: co,
+		Data:   letters,
+		Msg:    code.GetMsg(co),
+	}
+}
+
+type AdminReply struct {
+	LetterId int64  `json:"letter_id"`
+	AdminId  uint   `json:"admin_id"`
+	UserId   uint   `json:"user_id"`
+	Content  string `json:"content"`
+	Title    string `json:"title"`
+	IsRead   bool   `json:"is_read"`
+}
+
+func (a *AdminReply) Reply() serializer.Response {
+	fmt.Println("logic", a)
+	co := code.Success
+	letterDao := dao.NewLetterDao(db.DB)
+	if a.Content == "" {
+		err := letterDao.SetIsRead(a.LetterId, a.IsRead)
+		if err != nil {
+			zap.L().Info("logic/admin.go Reply failed error : ", zap.Error(err))
+			log.Println("logic/admin.go Reply failed error : ", err)
+			return serializer.Response{
+				Status: co,
+				Msg:    code.GetMsg(co),
+				Error:  "管理员标记已读失败",
+			}
+		}
+	} else {
+		err := letterDao.Reply(a.AdminId, a.UserId, a.Title, a.Content)
+		if err != nil {
+			zap.L().Info("logic/admin.go Reply failed error : ", zap.Error(err))
+			log.Println("logic/admin.go Reply failed error : ", err)
+			return serializer.Response{
+				Status: co,
+				Msg:    code.GetMsg(co),
+				Error:  "管理员回信失败",
+			}
+		}
+	}
+	return serializer.Response{
+		Status: co,
+		Msg:    code.GetMsg(co),
+	}
+}
