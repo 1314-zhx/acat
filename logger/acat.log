@@ -1,0 +1,3 @@
+{"level":"INFO","time":"2025-12-10T18:13:57.407+0800","caller":"logic/user.go:251","msg":"logic/user.go failed post error : ","error":"你已预约过面试，请勿重复提交"}
+{"level":"INFO","time":"2025-12-10T18:14:04.930+0800","caller":"logic/user.go:251","msg":"logic/user.go failed post error : ","error":"你已预约过面试，请勿重复提交"}
+{"level":"INFO","time":"2025-12-10T18:14:54.721+0800","caller":"logic/user.go:251","msg":"logic/user.go failed post error : ","error":"你已预约过面试，请勿重复提交"}

@@ -1,0 +1,110 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background-color: #f5f7fa;
+    padding: 20px;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Slot 列表 */
+.slots-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+.slot-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.slot-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+.slot-card.selected {
+    border-color: #4CAF50;
+    background-color: #f9f9f9;
+}
+.slot-card h3 {
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+.slot-info {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+.slot-info div {
+    margin: 4px 0;
+}
+
+/* 用户列表 */
+.users-section {
+    display: none;
+}
+.users-section h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 14px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.user-info {
+    flex: 1;
+}
+.user-info div {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #333;
+}
+.user-actions button {
+    margin-left: 10px;
+    padding: 6px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-pass {
+    background-color: #4CAF50;
+    color: white;
+}
+.btn-reject {
+    background-color: #f44336;
+    color: white;
+}
+.btn-pass:hover {
+    background-color: #45a049;
+}
+.btn-reject:hover {
+    background-color: #d32f2f;
+}
+
+.loading {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}

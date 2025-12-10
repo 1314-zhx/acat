@@ -177,12 +177,10 @@ func (ch *UserChe) Result(uid uint, ctx context.Context) serializer.Response {
 	userDao := dao.NewUserDao(db.DB)
 	pass, err := userDao.Result(uid, ch.Round, ctx)
 	if pass == 0 && err == nil {
-		co = code.Error
 		return serializer.Response{
 			Status: co,
-			Data:   "学生未参加面试",
+			Data:   "学生未通过面试",
 			Msg:    code.GetMsg(co),
-			Error:  "学生未参加面试",
 		}
 	}
 	if err != nil && pass == 0 {
@@ -192,13 +190,6 @@ func (ch *UserChe) Result(uid uint, ctx context.Context) serializer.Response {
 			Data:   "数据库错误",
 			Msg:    code.GetMsg(co),
 			Error:  "数据库错误",
-		}
-	}
-	if pass == 2 {
-		return serializer.Response{
-			Status: co,
-			Data:   "学生未通过面试",
-			Msg:    code.GetMsg(co),
 		}
 	}
 

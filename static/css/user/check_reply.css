@@ -1,0 +1,60 @@
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.loading,
+.error,
+.empty {
+    text-align: center;
+    padding: 20px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.error {
+    color: #e74c3c;
+}
+
+.empty {
+    color: #7f8c8d;
+}
+
+.letter {
+    background: white;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.letter-sender {
+    font-weight: bold;
+    color: #2980b9;
+    margin-bottom: 4px;
+}
+
+.letter-title {
+    font-size: 1.2em;
+    margin: 8px 0;
+    color: #2c3e50;
+}
+
+.letter-content {
+    white-space: pre-wrap; /* 保留换行和空格 */
+    line-height: 1.5;
+}

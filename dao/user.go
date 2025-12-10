@@ -100,7 +100,7 @@ func (dao *UserDao) ResetPassword(ctx context.Context, userID uint, hashedPasswo
 }
 func (dao *UserDao) Result(uid uint, round int, ctx context.Context) (int, error) {
 	var userResult model.InterviewResult
-	err := dao.db.WithContext(ctx).Where("id = ? and round = ?", uid, round).First(&userResult).Error
+	err := dao.db.WithContext(ctx).Where("user_id = ? and round = ?", uid, round).First(&userResult).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return 0, nil

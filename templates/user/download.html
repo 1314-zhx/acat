@@ -4,73 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>下载面试题</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background-color: #f8f9fa;
-      padding: 20px;
-      color: #333;
-    }
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    h1 {
-      margin-bottom: 24px;
-      color: #2c3e50;
-    }
-    .btn-download {
-      display: inline-block;
-      padding: 14px 36px;
-      background: #27ae60;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: bold;
-      transition: background 0.2s;
-      cursor: pointer;
-      border: none;
-    }
-    .btn-download:hover {
-      background: #219653;
-    }
-    .note {
-      margin-top: 20px;
-      color: #7f8c8d;
-      font-size: 14px;
-    }
-
-    /* ===== Toast 弹窗样式 ===== */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 500;
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.4s, visibility 0.4s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    .toast.show {
-      opacity: 1;
-      visibility: visible;
-    }
-    .toast.success { background: rgba(39, 174, 96, 0.95); }
-    .toast.error   { background: rgba(231, 76, 60, 0.95); }
-  </style>
+  <link rel="stylesheet" href="/static/css/user/download.css">
 </head>
 <body>
 <div class="container">
@@ -81,47 +15,6 @@
 
 <div id="toast" class="toast"></div>
 
-<script>
-  const toast = document.getElementById('toast');
-  const downloadBtn = document.getElementById('downloadBtn');
-
-  function showToast(message, type = 'success', duration = 6000) {
-    toast.textContent = message;
-    toast.className = `toast ${type} show`;
-    // 清除之前的定时器（防多次点击叠加）
-    if (window.toastTimer) clearTimeout(window.toastTimer);
-    window.toastTimer = setTimeout(() => {
-      toast.classList.remove('show');
-    }, duration);
-  }
-
-  downloadBtn.addEventListener('click', async function () {
-    const btn = this;
-    btn.disabled = true;
-    btn.textContent = '检测中...';
-
-    try {
-      // ✅ 用 HEAD 方法检查文件是否存在（不下载内容）
-      const checkRes = await fetch('/user/download/file', { method: 'HEAD' });
-
-      if (checkRes.ok) {
-        // 直接跳转下载（会触发文件保存）
-        window.location.href = '/user/download/file';
-
-        showToast('下载已开始！请查看浏览器底部下载栏', 'success', 6000);
-      } else {
-        showToast('暂无面试题文件，请联系管理员上传', 'error', 6000);
-      }
-    } catch (err) {
-      console.error('检测失败:', err);
-      showToast('网络错误，请稍后重试', 'error', 6000);
-    } finally {
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.textContent = '⬇立即下载';
-      }, 1000);
-    }
-  });
-</script>
+<script src="/static/js/user/download.js"></script>
 </body>
 </html>

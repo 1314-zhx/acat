@@ -1,0 +1,103 @@
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background-color: #f9fafc;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+.slot-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: white;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+.slot-card:hover:not(.disabled) {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.slot-card.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.slot-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+.slot-footer {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+.modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 8px;
+}
+.close {
+    float: right;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    color: #999;
+}
+.close:hover {
+    color: #333;
+}
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+button {
+    background: #409eff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+button:hover:not(:disabled) {
+    background: #337ecc;
+}
+button:disabled {
+    background: #b0c4de;
+    cursor: not-allowed;
+}
+.message {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+.success { background: #e6f4ea; color: #2e7d32; }
+.error { background: #fce8e6; color: #c62828; }
+.loading {
+    text-align: center;
+    color: #666;
+}

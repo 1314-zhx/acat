@@ -4,116 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>管理员操作中心 - ACAT</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #f8fafc;
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            color: #333;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* 默认桌面布局 */
-        .sidebar {
-            width: 240px;
-            background-color: #ffffff;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            padding: 20px 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-            order: 1; /* 默认顺序 */
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 40px;
-            max-width: calc(100% - 240px);
-            order: 2; /* 默认顺序 */
-        }
-
-        .nav-list {
-            list-style: none;
-            padding: 0 16px;
-        }
-
-        .nav-item {
-            margin-bottom: 8px;
-        }
-
-        .nav-item a {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            padding: 12px 16px;
-            border-radius: 6px;
-            display: block;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item a:hover {
-            background-color: #e6f0ff;
-            color: #2b6cb0;
-        }
-
-        .main-content h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #2d3748;
-        }
-
-        .main-content p {
-            font-size: 16px;
-            color: #718096;
-            line-height: 1.6;
-        }
-
-        /* 手机端：内容在上，导航在下 */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-
-            .main-content {
-                order: 1; /* 先显示内容 */
-                padding: 20px;
-                max-width: 100%;
-            }
-
-            .sidebar {
-                order: 2; /* 后显示导航 */
-                width: 100%;
-                height: auto;
-                position: relative;
-                box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08); /* 上阴影 */
-                padding: 16px 0;
-                background-color: #fff;
-            }
-
-            .nav-list {
-                padding: 0 20px;
-            }
-
-            .nav-item a {
-                padding: 12px 16px;
-                border-radius: 8px;
-                text-align: center;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/admin/admin_center.css">
 </head>
 <body>
 <!-- 左侧/底部导航栏 -->
 <nav class="sidebar">
     <ul class="nav-list">
-        <li class="nav-item"><a href="/admin/interview-schedule">查看面试时间表</a></li>
+        <li class="nav-item"><a href="/schedule">查看面试时间表</a></li>
         <li class="nav-item"><a href="/admin/set_schedule">设置面试时间表</a></li>
         <li class="nav-item"><a href="/admin/mailbox">查看邮箱</a></li>
         <li class="nav-item"><a href="/admin/set_result">设置面试结果</a></li>

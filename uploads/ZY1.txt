@@ -1,0 +1,33 @@
+void StrReplace(SeqString *S, SeqString *T, SeqString *V) {
+    if (T->length == 0 || S->length == 0) return;
+
+    SeqString temp;
+    temp.length = 0;
+
+    int i = 0; 
+    SeqString sub;
+
+    while (i <= S->length - T->length) {
+   
+        subString(S, &sub, i + 1, T->length);
+
+        if (strEqual(&sub, T)) {
+   
+            strConcat(&temp, &temp, V);
+            i += T->length; 
+        } else {
+   
+            if (temp.length < MAXSIZE) {
+                temp.data[temp.length++] = S->data[i];
+            }
+            i++;
+        }
+    }
+    while (i < S->length) {
+        if (temp.length < MAXSIZE) {
+            temp.data[temp.length++] = S->data[i];
+        }
+        i++;
+    }
+    strCopy(S, &temp);
+}
