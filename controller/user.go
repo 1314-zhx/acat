@@ -17,6 +17,8 @@ import (
 	"go.uber.org/zap"
 	"log"
 	"net/http"
+	"net/url"
+	"path/filepath"
 	"time"
 )
 
@@ -243,9 +245,55 @@ func LoginOutHandler(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/user/center")
 }
 func CheckReplyHandler(c *gin.Context) {
-
+	var checkReply logic.CheckReply
+	rawClaims, exists := c.Get("claims")
+	if !exists {
+		err := errors.New("认证信息缺失")
+		zap.L().Warn("ResultHandler: claims 不存在", zap.Error(err))
+		c.JSON(400, ErrorResponse(err))
+		return
+	}
+	// 类型断言
+	claims, ok := rawClaims.(*auth.JwtClaims)
+	if !ok {
+		err := errors.New("claims 类型错误")
+		zap.L().Error("ResultHandler: claims 类型异常", zap.Error(err))
+		c.JSON(400, ErrorResponse(err))
+		return
+	}
+	res := checkReply.Reply(claims.UserID)
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New("用户获取回信错误")))
+	}
+	c.JSON(200, res)
 }
 func DownloadHandler(c *gin.Context) {
+	var dl logic.Download
+	res := dl.DownloadQuestion("")
+	date, _ := json.Marshal(res)
+	fmt.Println("cs : ", string(date))
+	if res.Error != "" {
+		if res.Error == "文件不存在" || res.Error == "不支持的文件类型" {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "file not available"})
+		} else {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": res.Error})
+		}
+		return
+	}
+
+	data, ok := res.Data.(map[string]string)
+	if !ok {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
+		return
+	}
+
+	filePath := data["file_path"]
+	downloadName := data["filename"]
+
+	c.Header("Cache-Control", "no-store")
+	c.Header("Content-Disposition", "attachment; filename="+url.PathEscape(filepath.Base(downloadName)))
+	c.Header("Content-Type", "application/octet-stream")
+	c.File(filePath)
 
 }
 

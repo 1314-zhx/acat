@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>我的回信</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .loading,
+        .error,
+        .empty {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .error {
+            color: #e74c3c;
+        }
+        .empty {
+            color: #7f8c8d;
+        }
+        .letter {
+            background: white;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .letter-sender {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 4px;
+        }
+        .letter-title {
+            font-size: 1.2em;
+            margin: 8px 0;
+            color: #2c3e50;
+        }
+        .letter-content {
+            white-space: pre-wrap; /* 保留换行和空格 */
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>我的回信</h1>
+    <div id="message"></div>
+    <div id="letters"></div>
+</div>
+
+<script>
+    // 页面加载完成后立即请求数据
+    document.addEventListener('DOMContentLoaded', () => {
+        const messageEl = document.getElementById('message');
+        const lettersEl = document.getElementById('letters');
+
+        // 显示加载状态
+        messageEl.innerHTML = '<div class="loading">加载中...</div>';
+
+        // 请求当前路径的数据（即 /user/auth/check_reply）
+        fetch(window.location.pathname, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
+            credentials: 'same-origin' // 如果需要携带 cookie（如 JWT）
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 假设成功响应结构为：{ status: 200, data: [...], msg: "..." }
+                if (data.status === 200 && Array.isArray(data.data)) {
+                    const letters = data.data;
+
+                    if (letters.length === 0) {
+                        messageEl.innerHTML = '<div class="empty">暂无回信</div>';
+                        lettersEl.innerHTML = '';
+                    } else {
+                        messageEl.innerHTML = '';
+                        lettersEl.innerHTML = letters.map(letter => `
+                <div class="letter">
+                  <div class="letter-sender">来自：${escapeHtml(letter.send_name || '系统')}</div>
+                  <div class="letter-title">${escapeHtml(letter.title)}</div>
+                  <div class="letter-content">${escapeHtml(letter.content)}</div>
+                </div>
+              `).join('');
+                    }
+                } else {
+                    throw new Error(data.msg || '获取回信失败');
+                }
+            })
+            .catch(error => {
+                console.error('加载回信失败:', error);
+                messageEl.innerHTML = `<div class="error">加载失败：${escapeHtml(error.message)}</div>`;
+                lettersEl.innerHTML = '';
+            });
+    });
+
+    // 防 XSS：转义 HTML 特殊字符
+    function escapeHtml(text) {
+        if (typeof text !== 'string') return String(text);
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+</script>
+</body>
+</html>

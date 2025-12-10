@@ -29,10 +29,10 @@ func (u *UserDao) GetUsersByIDs(ids []uint, ctx context.Context) ([]model.UserMo
 	err := u.db.WithContext(ctx).Where("id IN ?", ids).Find(&users).Error
 	return users, err
 }
-func (dao *LetterDao) GetAdminLetters(aid uint) ([]model.MessageResponse, error) {
+func (dao *LetterDao) GetLetters(id uint) ([]model.MessageResponse, error) {
 	var letters []model.Message
 	err := dao.db.Select("id, send_id, receive_id, title, content,is_read").
-		Where("receive_id = ?  AND type = 0", aid).
+		Where("receive_id = ? ", id).
 		Find(&letters).Error
 	if err != nil {
 		return nil, err

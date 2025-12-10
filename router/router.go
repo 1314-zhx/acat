@@ -59,7 +59,10 @@ func NewRouter() *gin.Engine {
 		userRouter.POST("/login", controller.LoginHandler)
 		userRouter.GET("/login", controller.ShowLoginHandler)
 		// 用户下载电子版试题
-		userRouter.POST("/download", controller.DownloadHandler)
+		userRouter.GET("/download/file", controller.DownloadHandler)
+		userRouter.GET("/download", func(c *gin.Context) {
+			c.HTML(200, "download.html", nil)
+		})
 		authed := userRouter.Group("/auth")
 		authed.Use(middleware.AuthUserHTML())
 		{
@@ -79,8 +82,10 @@ func NewRouter() *gin.Engine {
 				c.HTML(200, "message.html", nil)
 			})
 			// 用户查看回信
-			//TODO:
 			authed.POST("/check_reply", controller.CheckReplyHandler)
+			authed.GET("/check_reply", func(c *gin.Context) {
+				c.HTML(200, "check_reply.html", nil)
+			})
 			// 展示管理员列表
 			authed.GET("/show_admin", controller.ShowAdminHandler)
 
@@ -130,6 +135,11 @@ func NewRouter() *gin.Engine {
 		adminRouter.POST("/reply", controller.AdminReplyHandler)
 		adminRouter.GET("/mailbox", func(c *gin.Context) {
 			c.HTML(200, "admin_check_reply_letter.html", nil)
+		})
+		// 管理员上传电子版试题
+		adminRouter.POST("/upload", controller.UploadHandler)
+		adminRouter.GET("/upload", func(c *gin.Context) {
+			c.HTML(200, "upload.html", nil)
 		})
 	}
 	r.NoRoute(controller.Norouter)

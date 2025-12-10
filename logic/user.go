@@ -19,6 +19,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"log"
+	"os"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -576,5 +579,120 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	return serializer.Response{
 		Status: co,
 		Msg:    code.GetMsg(co),
+	}
+}
+
+//------------>用户查看来信<--------------//
+type CheckReply struct{}
+
+func (c *CheckReply) Reply(uid uint) serializer.Response {
+	co := code.Success
+	letterDao := dao.NewLetterDao(db.DB)
+	letters, err := letterDao.GetLetters(uid)
+	if err != nil {
+		co = code.Error
+		zap.L().Info("logic/user.go Reply get error : ", zap.Error(err))
+		log.Println("logic/user.go Reply get error : ", err)
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "获取信件失败",
+		}
+	}
+	return serializer.Response{
+		Status: co,
+		Data:   letters,
+		Msg:    code.GetMsg(co),
+	}
+}
+
+//----------->用户下载面试试题<------------//
+type Download struct {
+}
+
+// DownloadQuestion 接收文件名，返回文件路径或错误
+func (d *Download) DownloadQuestion(filename string) serializer.Response {
+	// 如果 filename 为空，自动查找 uploads 目录中第一个合法文件
+	if filename == "" {
+		files, err := os.ReadDir(uploadDir)
+		if err != nil || len(files) == 0 {
+			return serializer.Response{
+				Status: code.Error,
+				Msg:    code.GetMsg(code.Error),
+				Error:  "文件不存在",
+			}
+		}
+
+		var foundName string
+		for _, f := range files {
+			if !f.IsDir() {
+				name := f.Name()
+				ext := strings.ToLower(filepath.Ext(name))
+				if allowedExts[ext] {
+					foundName = name
+					break
+				}
+			}
+		}
+
+		if foundName == "" {
+			return serializer.Response{
+				Status: code.Error,
+				Msg:    code.GetMsg(code.Error),
+				Error:  "文件不存在",
+			}
+		}
+		filename = foundName
+	}
+
+	// 防止路径穿越或非法字符
+	if strings.ContainsAny(filename, "/\\") || strings.Contains(filename, "..") {
+		zap.L().Warn("拒绝非法文件名", zap.String("filename", filename))
+		return serializer.Response{
+			Status: code.Error,
+			Msg:    code.GetMsg(code.Error),
+			Error:  "无效的文件名",
+		}
+	}
+
+	// 校验扩展名
+	ext := strings.ToLower(filepath.Ext(filename))
+	if !allowedExts[ext] {
+		zap.L().Warn("尝试下载不支持的文件类型", zap.String("filename", filename))
+		return serializer.Response{
+			Status: code.Error,
+			Msg:    code.GetMsg(code.Error),
+			Error:  "不支持的文件类型",
+		}
+	}
+
+	// 构建绝对路径,避免相对路径和工作目录问题
+	filePath := filepath.Join(uploadDir, filename)
+	absPath, err := filepath.Abs(filePath)
+	if err != nil {
+		zap.L().Error("无法解析文件绝对路径", zap.String("path", filePath), zap.Error(err))
+		return serializer.Response{
+			Status: code.Error,
+			Msg:    code.GetMsg(code.Error),
+			Error:  "内部错误",
+		}
+	}
+
+	// 文件是否真实存在
+	_, err = os.Stat(absPath)
+	if os.IsNotExist(err) {
+		zap.L().Warn("文件不存在（logic 层校验）", zap.String("path", absPath))
+		return serializer.Response{
+			Status: code.Error,
+			Msg:    code.GetMsg(code.Error),
+			Error:  "文件不存在",
+		}
+	}
+
+	// 成功返回
+	return serializer.Response{
+		Status: code.Success,
+		Msg:    code.GetMsg(code.Success),
+		Data:   map[string]string{"file_path": absPath, "filename": filename},
 	}
 }

@@ -3,6 +3,7 @@ package redislock
 import (
 	"context"
 	"errors"
+	_ "embed"
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 	"sync"
@@ -64,14 +65,9 @@ func (rl *RedisLock) Lock(ctx context.Context) (bool, error) {
 	return ok, nil
 }
 
-// unlockScript 是原子删除脚本：只有 value 匹配才删除 lua脚本
-const unlockScript = `
-if redis.call("GET", KEYS[1]) == ARGV[1] then
-    return redis.call("DEL", KEYS[1])
-else
-    return 0
-end
-`
+// unlockScript 是原子删除脚本：只有 value 匹配才删除 lua脚本，用embed编译时导入
+//go:embed unlock.lua
+var unlockScript string
 
 // Unlock 释放锁
 func (rl *RedisLock) Unlock(ctx context.Context) error {

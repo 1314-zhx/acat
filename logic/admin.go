@@ -11,7 +11,12 @@ import (
 	"errors"
 	"fmt"
 	"go.uber.org/zap"
+	"io"
 	"log"
+	"mime/multipart"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 //--------->管理员登录<-----------//
@@ -321,7 +326,7 @@ type AdminLetter struct {
 func (a *AdminLetter) Letter(aid uint) serializer.Response {
 	co := code.Success
 	letterDao := dao.NewLetterDao(db.DB)
-	letters, err := letterDao.GetAdminLetters(aid)
+	letters, err := letterDao.GetLetters(aid)
 	if err != nil {
 		co = code.Error
 		zap.L().Info("logic/admin.go letter get error : ", zap.Error(err))
@@ -378,5 +383,101 @@ func (a *AdminReply) Reply() serializer.Response {
 	return serializer.Response{
 		Status: co,
 		Msg:    code.GetMsg(co),
+	}
+}
+
+//------------>管理员上传电子版试题<------------//
+const uploadDir = "./uploads"
+
+var allowedExts = map[string]bool{
+	".pdf":  true,
+	".docx": true,
+	".doc":  true,
+	".txt":  true,
+	".md":   true,
+}
+
+type Upload struct{}
+
+// UploadQuestion 接收 *multipart.FileHeader，不依赖 gin.Context
+func (u *Upload) UploadQuestion(file *multipart.FileHeader) serializer.Response {
+	co := code.Success
+	err := os.MkdirAll(uploadDir, 0755)
+	// 确保上传目录存在
+	if err != nil {
+		co = code.Error
+		zap.L().Error("创建上传目录失败", zap.Error(err))
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "服务器内部错误：无法创建上传目录",
+		}
+	}
+	// 删除原有文件
+	oldFiles, err := os.ReadDir(uploadDir)
+	if err == nil { // 如果目录存在且可读
+		for _, f := range oldFiles {
+			if !f.IsDir() {
+				os.Remove(filepath.Join(uploadDir, f.Name()))
+			}
+		}
+	}
+	// 获取安全的文件名并校验扩展名
+	filename := filepath.Base(file.Filename)
+	ext := strings.ToLower(filepath.Ext(filename))
+
+	if !allowedExts[ext] {
+		co = code.Error
+		zap.L().Warn("上传了不支持的文件类型", zap.String("ext", ext), zap.String("filename", filename))
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "不支持的文件类型，请上传 PDF、Word 或 TXT 文档",
+		}
+	}
+
+	// 构建保存路径
+	savePath := filepath.Join(uploadDir, filename)
+
+	// 打开上传的文件流
+	src, err := file.Open()
+	if err != nil {
+		co = code.Error
+		zap.L().Error("无法打开上传的文件", zap.Error(err))
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "文件读取失败",
+		}
+	}
+	defer src.Close()
+
+	// 创建目标文件
+	dst, err := os.Create(savePath)
+	if err != nil {
+		co = code.Error
+		zap.L().Error("无法创建目标文件", zap.Error(err), zap.String("path", savePath))
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "文件保存失败",
+		}
+	}
+	defer dst.Close()
+	// 复制内容
+	_, err = io.Copy(dst, src)
+	if err != nil {
+		co = code.Error
+		zap.L().Error("文件写入失败", zap.Error(err))
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "文件写入失败",
+		}
+	}
+	return serializer.Response{
+		Status: co,
+		Msg:    code.GetMsg(co),
+		Data:   map[string]string{"filename": filename},
 	}
 }

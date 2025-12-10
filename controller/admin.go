@@ -183,3 +183,17 @@ func AdminReplyHandler(c *gin.Context) {
 	fmt.Println(string(data))
 	c.JSON(200, res)
 }
+
+func UploadHandler(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "未提供文件"})
+		return
+	}
+	var upload logic.Upload
+	res := upload.UploadQuestion(file)
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New("文件上传失败")))
+	}
+	c.JSON(http.StatusOK, res)
+}
