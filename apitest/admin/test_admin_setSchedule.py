@@ -19,7 +19,8 @@ def admin_login(session):
     assert resp.status_code == 200, f"Login failed: {resp.text}"
     return resp
 
-
+# 用来进行测试前的用户身份登录，因为该模块需要用户身份验证
+# 并由pytest将其结果注入到与函数同名的参数中
 @pytest.fixture
 def auth_session():
     """为每个测试创建独立的已认证 session"""
@@ -47,7 +48,8 @@ def test_admin_set_success(auth_session):
     assert resp.status_code == 200
     json_data = resp.json()
     assert json_data.get("status") == 200
-    assert "msg" in json_data
+    error = json_data.get("error")
+    assert error and error == ""
 
 # 反向测试
 def test_admin_set_round_less_than_1(auth_session):

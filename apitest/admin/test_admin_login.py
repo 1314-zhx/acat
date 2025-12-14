@@ -20,7 +20,7 @@ def login(phone, password):
 # ===== 测试用例 =====
 # 正确手机号和密码：应返回 200，并设置 token cookie
 def test_admin_login_success():
-    resp = login("15229300775", "123456")  # 替换为测试账号
+    resp = login("15229300775", "123456")
 
     assert resp.status_code == 200
     assert "token" in resp.cookies
@@ -76,5 +76,4 @@ def test_admin_login_invalid_json():
         data="not a json",
         headers={"Content-Type": "application/json"}
     )
-    # Gin 通常返回 400
     assert resp.status_code == 400
