@@ -1,10 +1,13 @@
-/*
-在main文件中初始化组件
-*/
+// @title           API
+// @version         1.0
+// @description     acat recruit
+// @host            localhost:9090
+// @BasePath        /
 package main
 
 import (
 	"acat/dao/db"
+	_ "acat/docs"
 	"acat/logger"
 	"acat/redislock"
 	"acat/router"

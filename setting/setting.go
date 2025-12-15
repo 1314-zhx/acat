@@ -44,6 +44,7 @@ type MySQLConf struct {
 	MySQLUser        string `mapstructure:"user"`
 	MySQLPwd         string `mapstructure:"password"`
 	MySQLDbName      string `mapstructure:"dbname"`
+	MySQLDbNameTest  string `mapstructure:"dbname_test"`
 	MySQLMaxOpenConn int    `mapstructure:"maxOpenConn"` // 匹配 yaml 的 maxOpenConn
 	MySQLMaxIdleConn int    `mapstructure:"maxIdleConn"`
 }

@@ -1,4 +1,4 @@
-# ACAT 实验室纳新网站源码(未完成...)
+# ACAT 实验室纳新网站源码(mvp版本)
 > 后续开发者要了解该项目，从本文档开始
 
 
@@ -59,10 +59,10 @@ go get gopkg.in/natefinch/lumberjack.v2@latest
 go install github.com/swaggo/swag/v2/cmd/swag@latest
 ```
 
-> 4.xorm 安装
+> 4.gorm 安装
 
 ```
-go get xorm.io/xorm@latest
+go get -u gorm.io/gorm
 ```
 
 > 5.viper 安装
@@ -177,8 +177,7 @@ nil
 
 2.更新`github`克隆的地址，为你的地址。
 
-3.每期租用服务器的费用实验室同级学生分摊，
-开发者根据服务器IP和域名更新外部部署的命令路径。
+3.开发者根据服务器IP和域名更新外部部署的命令路径。
 
 4.每期开发人员须在`开发人员名单`中留名，以保证项目知识迁移，新老人员对接。
 以 `xxx[小组名]` 格式。

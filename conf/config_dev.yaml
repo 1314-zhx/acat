@@ -17,6 +17,7 @@ mysql:
   user: "root"
   password: "123456"
   dbname: "acat"
+  dbname_test: "acat_test"
   maxOpenConn: 200
   maxIdleConn: 50
 redis:

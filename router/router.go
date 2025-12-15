@@ -11,6 +11,9 @@ import (
 // 返回gin的引擎
 func NewRouter() *gin.Engine {
 	r := gin.Default()
+	// 注册 Swagger UI
+	//r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	r.Use(middleware.GinRecovery(true))
 	r.LoadHTMLGlob("templates/*/*.html")
 	// 加载静态文件

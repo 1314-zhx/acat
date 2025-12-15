@@ -64,6 +64,10 @@ func AdminSetScheduleHandler(c *gin.Context) {
 		return
 	}
 	res := setSlot.SetSchedule()
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(http.StatusOK, res)
 }
 func AdminSetInterviewResultHandler(c *gin.Context) {
@@ -76,6 +80,10 @@ func AdminSetInterviewResultHandler(c *gin.Context) {
 		return
 	}
 	res := setResult.SetUserResult(c.Request.Context())
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(200, res)
 }
 func SetPassHandler(c *gin.Context) {
@@ -105,6 +113,7 @@ func SetPassHandler(c *gin.Context) {
 	res := setPass.SetUserPass(claims.UserID)
 	if res.Error != "" {
 		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
 	}
 	c.JSON(200, res)
 }
