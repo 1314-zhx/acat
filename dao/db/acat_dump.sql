@@ -1,3 +1,5 @@
+-- mysql -u root -p --default-character-set=utf8mb4 acat_test < "D:\ACAT\dao\db\acat_dump.sql" --
+-- 用上述cmd指令将该数据原拷贝到测试数据库中 --
 -- MySQL dump 10.13  Distrib 9.3.0, for Win64 (x86_64)--
 --
 -- Host: 127.0.0.1    Database: acat

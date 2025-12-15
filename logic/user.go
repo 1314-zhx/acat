@@ -42,6 +42,7 @@ func (l *UserLog) Login(ctx context.Context) (serializer.Response, *model.UserLo
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),
+			Error:  "缺少必填字段",
 		}, nil
 	}
 	if len(l.Phone) != 11 {
@@ -49,6 +50,7 @@ func (l *UserLog) Login(ctx context.Context) (serializer.Response, *model.UserLo
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),
+			Error:  "参数格式错误",
 		}, nil
 	}
 
@@ -61,6 +63,7 @@ func (l *UserLog) Login(ctx context.Context) (serializer.Response, *model.UserLo
 		return serializer.Response{
 			Status: co,
 			Msg:    "手机号或密码错误",
+			Error:  "手机号或密码错误",
 		}, nil
 	}
 	// 2 比对密码（用查到的 userModel.Password）
@@ -70,6 +73,7 @@ func (l *UserLog) Login(ctx context.Context) (serializer.Response, *model.UserLo
 		return serializer.Response{
 			Status: co,
 			Msg:    "手机号或密码错误",
+			Error:  "手机号或密码错误",
 		}, nil
 	}
 
@@ -109,7 +113,19 @@ func (r *UserRes) Register() serializer.Response {
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),
-			Error:  errors.New("缺少必填字段").Error(),
+			Error:  "缺少必填字段",
+		}
+	}
+	userDao := dao.NewUserDao(db.DB)
+	exists := userDao.NotExistsUserByPhone(r.Phone)
+	if !exists {
+		co = code.Error
+		zap.L().Info("logic/user.go Register() failed  : ", zap.Error(errors.New("该手机号已被注册")))
+		log.Println("logic/user.go Register() failed  : ", "该手机号已被注册")
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "该手机号已被注册",
 		}
 	}
 	// 检验参数格式
@@ -120,7 +136,7 @@ func (r *UserRes) Register() serializer.Response {
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),
-			Error:  errors.New("参数错误").Error(),
+			Error:  "参数错误",
 		}
 	}
 	if len(r.Phone) != 11 || !util.IsPhone(r.Phone) {
@@ -130,7 +146,7 @@ func (r *UserRes) Register() serializer.Response {
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),
-			Error:  errors.New("格式不正确").Error(),
+			Error:  "格式不正确",
 		}
 	}
 
@@ -141,11 +157,11 @@ func (r *UserRes) Register() serializer.Response {
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),
-			Error:  errors.New("格式不正确").Error(),
+			Error:  "格式不正确",
 		}
 	}
 	// 传给dao进行存储
-	userDao := dao.NewUserDao(db.DB)
+	userDao = dao.NewUserDao(db.DB)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(r.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println("bcrypt.GenerateFromPassword error", err)

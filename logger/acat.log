@@ -14,3 +14,26 @@
 {"level":"INFO","time":"2025-12-14T20:13:11.174+0800","caller":"controller/admin.go:108","msg":"controller/admin.go SetPassHandler failed shouldBindJSON error : ","error":"json: cannot unmarshal number -1 into Go struct field SetPass.slot_id of type uint"}
 {"level":"INFO","time":"2025-12-14T20:13:11.222+0800","caller":"logic/admin.go:243","msg":"更新面试结果失败","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'updated_at`=? WHERE id = ? AND `user_models`.`deleted_at` IS NULL' at line 1"}
 {"level":"INFO","time":"2025-12-14T20:13:11.271+0800","caller":"logic/admin.go:243","msg":"更新面试结果失败","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'updated_at`=? WHERE id = ? AND `user_models`.`deleted_at` IS NULL' at line 1"}
+{"level":"INFO","time":"2025-12-15T11:10:09.053+0800","caller":"controller/admin.go:126","msg":"logic/admin.go AdminPublishHandler failed shouldBindJSON error : ","error":"json: cannot unmarshal number -1 into Go struct field PassUser.user_id of type uint"}
+{"level":"INFO","time":"2025-12-15T11:11:07.496+0800","caller":"controller/admin.go:126","msg":"logic/admin.go AdminPublishHandler failed shouldBindJSON error : ","error":"json: cannot unmarshal number -1 into Go struct field PassUser.user_id of type uint"}
+{"level":"INFO","time":"2025-12-15T11:16:10.882+0800","caller":"controller/admin.go:126","msg":"logic/admin.go AdminPublishHandler failed shouldBindJSON error : ","error":"json: cannot unmarshal number -1 into Go struct field PassUser.user_id of type uint"}
+{"level":"INFO","time":"2025-12-15T11:17:45.220+0800","caller":"controller/admin.go:126","msg":"logic/admin.go AdminPublishHandler failed shouldBindJSON error : ","error":"json: cannot unmarshal number -1 into Go struct field PassUser.user_id of type uint"}
+{"level":"INFO","time":"2025-12-15T11:18:06.683+0800","caller":"controller/admin.go:126","msg":"logic/admin.go AdminPublishHandler failed shouldBindJSON error : ","error":"json: cannot unmarshal number -1 into Go struct field PassUser.user_id of type uint"}
+{"level":"INFO","time":"2025-12-15T11:48:31.616+0800","caller":"logic/user.go:62","msg":"用户不存在或数据库查询失败","phone":"15229377777","error":"user not found"}
+{"level":"INFO","time":"2025-12-15T12:02:12.094+0800","caller":"logic/user.go:122","msg":"logic/user.go Register() failed  : ","error":"密码与第二次不一样"}
+{"level":"INFO","time":"2025-12-15T12:02:12.181+0800","caller":"logic/user.go:111","msg":"logic/user.go Register() failed miss must info : ","error":"缺少必需字段"}
+{"level":"INFO","time":"2025-12-15T12:02:12.183+0800","caller":"logic/user.go:132","msg":"logic/user.go Register() failed phone form error : ","error":"手机号格式错误"}
+{"level":"INFO","time":"2025-12-15T12:07:35.929+0800","caller":"logic/user.go:132","msg":"logic/user.go Register() failed  : ","error":"密码与第二次不一样"}
+{"level":"INFO","time":"2025-12-15T12:07:36.014+0800","caller":"logic/user.go:111","msg":"logic/user.go Register() failed miss must info : ","error":"缺少必需字段"}
+{"level":"INFO","time":"2025-12-15T12:07:36.017+0800","caller":"logic/user.go:142","msg":"logic/user.go Register() failed phone form error : ","error":"手机号格式错误"}
+{"level":"INFO","time":"2025-12-15T12:08:18.718+0800","caller":"logic/user.go:132","msg":"logic/user.go Register() failed  : ","error":"密码与第二次不一样"}
+{"level":"INFO","time":"2025-12-15T12:08:18.785+0800","caller":"logic/user.go:111","msg":"logic/user.go Register() failed miss must info : ","error":"缺少必需字段"}
+{"level":"INFO","time":"2025-12-15T12:08:18.788+0800","caller":"logic/user.go:142","msg":"logic/user.go Register() failed phone form error : ","error":"手机号格式错误"}
+{"level":"INFO","time":"2025-12-15T12:08:45.160+0800","caller":"logic/user.go:142","msg":"logic/user.go Register() failed phone form error : ","error":"手机号格式错误"}
+{"level":"INFO","time":"2025-12-15T12:08:45.227+0800","caller":"logic/user.go:111","msg":"logic/user.go Register() failed miss must info : ","error":"缺少必需字段"}
+{"level":"INFO","time":"2025-12-15T12:08:45.230+0800","caller":"logic/user.go:142","msg":"logic/user.go Register() failed phone form error : ","error":"手机号格式错误"}
+{"level":"INFO","time":"2025-12-15T12:09:17.301+0800","caller":"logic/user.go:142","msg":"logic/user.go Register() failed phone form error : ","error":"手机号格式错误"}
+{"level":"INFO","time":"2025-12-15T12:09:17.376+0800","caller":"logic/user.go:111","msg":"logic/user.go Register() failed miss must info : ","error":"缺少必需字段"}
+{"level":"INFO","time":"2025-12-15T12:09:17.378+0800","caller":"logic/user.go:142","msg":"logic/user.go Register() failed phone form error : ","error":"手机号格式错误"}
+{"level":"INFO","time":"2025-12-15T12:10:00.883+0800","caller":"logic/user.go:111","msg":"logic/user.go Register() failed miss must info : ","error":"缺少必需字段"}
+{"level":"INFO","time":"2025-12-15T12:10:00.886+0800","caller":"logic/user.go:142","msg":"logic/user.go Register() failed phone form error : ","error":"手机号格式错误"}

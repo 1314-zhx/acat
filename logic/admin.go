@@ -262,11 +262,51 @@ type PassUser struct {
 	Email     string `json:"email"`
 	Customize bool   `json:"customize"` // 自定义开关，true为自定义发件信息，false为默认发件信息
 	Content   string `json:"content"`   // 自定义内容
+	Test_mode bool   `json:"test_mode"` // 测试用，测试完成后，可以删除
 }
 
 func (p *PassUser) Publish() serializer.Response {
 	co := code.Success
-	fmt.Println(p)
+	userDao := dao.NewUserDao(db.DB)
+	if !util.IsEmail(p.Email) {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "邮件格式不对",
+		}
+	}
+	if len(p.Content) > 50 {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "正文超过50字",
+		}
+	}
+	_, err := userDao.GetUserByID(p.UserId, context.Background())
+	if err != nil && err.Error() == "user not found" {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "user not found",
+		}
+	}
+	if err != nil {
+		co = code.Error
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  "查询错误",
+		}
+	}
+	//if p.Test_mode == true {
+	//	return serializer.Response{
+	//		Status: co,
+	//		Msg:    code.GetMsg(co),
+	//	}
+	//}
 	if p.Customize == true {
 		err := PublicCustomEmail(p.Email, p.Content)
 		if err != nil {

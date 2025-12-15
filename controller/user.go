@@ -32,6 +32,10 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 	res := userRegister.Register()
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(200, res)
 }
 func LoginHandler(c *gin.Context) {
@@ -47,6 +51,10 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	res, userLogin := user.Login(ctx)
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	if res.Status == code.Success {
 		token, err := auth.GenerateToken(userLogin.UId, userLogin.Name, 0)
 		if err != nil {
@@ -93,6 +101,10 @@ func ResultHandler(c *gin.Context) {
 		return
 	}
 	res := userChe.Result(claims.UserID, ctx)
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(200, res)
 }
 func PostHandler(c *gin.Context) {
@@ -122,6 +134,10 @@ func PostHandler(c *gin.Context) {
 		return
 	}
 	res := userPost.Post(claims.UserID, ctx)
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(200, res)
 }
 func LetterHandler(c *gin.Context) {
@@ -149,12 +165,17 @@ func LetterHandler(c *gin.Context) {
 		return
 	}
 	res := letter.Letter(claims.UserID)
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(200, res)
 }
 func ShowAdminHandler(c *gin.Context) {
 	res := logic.ShowAdmin()
-	if res.Status == code.Error {
-		c.JSON(400, ErrorResponse(errors.New("管理员列表获取错误")))
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
 	}
 	c.JSON(200, res)
 }
@@ -185,8 +206,8 @@ func UpdateHandler(c *gin.Context) {
 		return
 	}
 	res := userUpdate.Update(claims.UserID)
-	if res.Status != 200 {
-		c.JSON(400, ErrorResponse(errors.New("更新失败")))
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
 		return
 	}
 	c.JSON(200, res)
@@ -208,9 +229,10 @@ func ShowSlotHandler(c *gin.Context) {
 		return
 	}
 	res := logic.ShowSlot(claims.UserID)
-	fmt.Println("controller", res)
-	jsonData, _ := json.Marshal(res)
-	fmt.Println("JSON OUTPUT:", string(jsonData))
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(200, res)
 }
 func ForgetHandler(c *gin.Context) {
@@ -223,6 +245,10 @@ func ForgetHandler(c *gin.Context) {
 		return
 	}
 	res := forget.Forget()
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(200, res)
 }
 func ReSetPasswordHandler(c *gin.Context) {
@@ -236,6 +262,10 @@ func ReSetPasswordHandler(c *gin.Context) {
 		return
 	}
 	res := reset.ResetPassword(c.Request.Context())
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
 	c.JSON(200, res)
 }
 func LoginOutHandler(c *gin.Context) {
@@ -263,7 +293,8 @@ func CheckReplyHandler(c *gin.Context) {
 	}
 	res := checkReply.Reply(claims.UserID)
 	if res.Error != "" {
-		c.JSON(400, ErrorResponse(errors.New("用户获取回信错误")))
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
 	}
 	c.JSON(200, res)
 }

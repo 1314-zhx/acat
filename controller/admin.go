@@ -130,7 +130,8 @@ func AdminPublishHandler(c *gin.Context) {
 	}
 	res := passUser.Publish()
 	if res.Error != "" {
-		c.JSON(400, ErrorResponse(errors.New("AdminPublishHandler logic error")))
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
 	}
 	c.JSON(200, res)
 }
@@ -145,7 +146,8 @@ func GetPassUserHandler(c *gin.Context) {
 	}
 	res := round.GetPassUser()
 	if res.Error != "" {
-		c.JSON(400, ErrorResponse(errors.New("GetPassUser logic error")))
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
 	}
 	c.JSON(200, res)
 }
@@ -169,7 +171,8 @@ func AdminLetterHandler(c *gin.Context) {
 	}
 	res := adminLetter.Letter(claims.UserID)
 	if res.Error != "" {
-		c.JSON(400, ErrorResponse(errors.New("管理员查看信件失败")))
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
 	}
 	data, _ := json.Marshal(res)
 	fmt.Println(string(data))
@@ -187,9 +190,8 @@ func AdminReplyHandler(c *gin.Context) {
 	res := reply.Reply()
 	if res.Error != "" {
 		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
 	}
-	data, _ := json.Marshal(res)
-	fmt.Println(string(data))
 	c.JSON(200, res)
 }
 
@@ -202,7 +204,8 @@ func UploadHandler(c *gin.Context) {
 	var upload logic.Upload
 	res := upload.UploadQuestion(file)
 	if res.Error != "" {
-		c.JSON(400, ErrorResponse(errors.New("文件上传失败")))
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
 	}
 	c.JSON(http.StatusOK, res)
 }
