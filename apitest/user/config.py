@@ -12,5 +12,4 @@ RESET_PASSWORD_ROUTE = "/user/reset-password"
 #  /user/auth
 RESULT_INTERVIEW = "/user/auth/result"
 SIGNUP_INTERVIEW = "/user/auth/signup"
-CONVERSATION_ROUTE ="/user/auth/conversation"
 UPDATE_ROUTE = "/user/auth/update"
