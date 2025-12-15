@@ -1,0 +1,63 @@
+basePath: /
+definitions:
+  serializer.Response:
+    properties:
+      data: {}
+      error:
+        type: string
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:9090
+info:
+  contact: {}
+  description: acat recruit
+  title: API
+  version: "1.0"
+paths:
+  /check:
+    get:
+      description: 用户或管理员进入后显示所有的面试时间段表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回面试时间表
+          schema:
+            $ref: '#/definitions/serializer.Response'
+        "400":
+          description: 请求失败
+          schema:
+            $ref: '#/definitions/serializer.Response'
+      summary: 返回面试表
+      tags:
+      - 公有
+  /index:
+    get:
+      description: 返回首页 HTML 页面（服务端渲染）
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: HTML 页面内容
+          schema:
+            type: string
+      summary: 渲染首页
+      tags:
+      - 公有
+  /norouter:
+    get:
+      description: 路由未找到时返回自定义 404 页面
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: 404 HTML 页面
+          schema:
+            type: string
+      summary: 404 页面
+      tags:
+      - 公有
+swagger: "2.0"
