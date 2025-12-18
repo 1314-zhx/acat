@@ -50,6 +50,7 @@ func NewRouter() *gin.Engine {
 		})
 		// 用户注册
 		userRouter.POST("/register", controller.RegisterHandler)
+		userRouter.POST("/complete_register", controller.CompleteRegisterHandler)
 		userRouter.GET("/register", func(c *gin.Context) {
 			c.HTML(200, "register.html", nil)
 		})

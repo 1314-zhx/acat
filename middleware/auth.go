@@ -22,7 +22,6 @@ func AuthUserHTML() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		fmt.Println("验证成功，用户ID:", claims.UserID)
 		c.Set("claims", claims)
 		c.Next()
 	}

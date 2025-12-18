@@ -61,6 +61,13 @@
             <input type="password" id="rePassword" name="rePassword" required />
         </div>
 
+        <!-- 验证码输入框（初始隐藏） -->
+        <div class="form-group" id="codeGroup" style="display:none;">
+            <label for="code">邮箱验证码 *</label>
+            <input type="text" id="code" name="code" maxlength="6" placeholder="请输入6位验证码" />
+            <button type="button" id="resendBtn" class="resend-btn">重新发送</button>
+        </div>
+
         <button type="submit">注册</button>
     </form>
 

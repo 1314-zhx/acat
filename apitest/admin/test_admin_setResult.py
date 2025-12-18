@@ -17,7 +17,8 @@ def auth_session():
     """为每个测试创建独立的已认证 session"""
     s = requests.Session()
     admin_login(s)
-    return s
+    yield s
+    s.close()
 
 
 def set_result(session,slot_id,round):

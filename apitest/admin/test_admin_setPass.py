@@ -19,7 +19,8 @@ def auth_session():
     """为每个测试创建独立的已认证 session"""
     s = requests.Session() # 为可变变量，可用在其它函数中被改变并影响此处
     admin_login(s)
-    return s
+    yield s
+    s.close()
 # 工具函数
 def set_pass(session, user_id, slot_id, round, is_pass):
     payload = {

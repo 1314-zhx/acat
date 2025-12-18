@@ -49,22 +49,25 @@ button {
 button:hover {
     background-color: #45a049;
 }
-.error {
-    color: red;
-    margin-top: 10px;
-    font-size: 14px;
+
+/* 重新发送按钮样式 */
+.resend-btn {
+    width: auto !important;
+    padding: 5px 10px !important;
+    font-size: 14px !important;
+    margin-top: 5px;
+    background-color: #1890ff !important;
 }
-.success {
-    color: green;
-    margin-top: 10px;
-    font-size: 14px;
+.resend-btn:hover {
+    background-color: #40a9ff !important;
 }
+
 .toast {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-100%);
-    background: #52c41a; /* 默认绿色 */
+    background: #52c41a;
     color: white;
     padding: 12px 24px;
     border-radius: 6px;

@@ -25,7 +25,8 @@ def get_interview_result(session: requests.Session, round_num: int):
 def auth_session():
     s = requests.Session()
     user_login(s)
-    return s
+    yield s
+    s.close()
 
 # 正向测试
 def test_user_result_success(auth_session):

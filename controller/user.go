@@ -31,7 +31,23 @@ func RegisterHandler(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 		return
 	}
-	res := userRegister.Register()
+	res := userRegister.SendRegisterCode()
+	if res.Error != "" {
+		c.JSON(400, ErrorResponse(errors.New(res.Error)))
+		return
+	}
+	c.JSON(200, res)
+}
+func CompleteRegisterHandler(c *gin.Context) {
+	var userRegister logic.UserRes
+	err := c.ShouldBindJSON(&userRegister)
+	if err != nil {
+		zap.L().Info("controller/user.go CompleteRegisterHandler() failed shouldBindJSON() error : ", zap.Error(err))
+		log.Println("controller/user.go CompleteRegisterHandler() failed shouldBindJSON() error : ", err)
+		c.JSON(200, ErrorResponse(err))
+		return
+	}
+	res := userRegister.CompleteRegister()
 	if res.Error != "" {
 		c.JSON(400, ErrorResponse(errors.New(res.Error)))
 		return
@@ -82,14 +98,14 @@ func ResultHandler(c *gin.Context) {
 	if err != nil {
 		zap.L().Info("controller/user.go ResultHandler() failed shouldBindJSON() error : ", zap.Error(err))
 		log.Println("controller/user.go ResultHandler() failed shouldBindJSON() error : ", err)
-		c.JSON(200, ErrorResponse(err))
+		c.JSON(400, ErrorResponse(err))
 		return
 	}
 	rawClaims, exists := c.Get("claims")
 	if !exists {
 		err := errors.New("认证信息缺失")
 		zap.L().Warn("ResultHandler: claims 不存在", zap.Error(err))
-		c.JSON(200, ErrorResponse(err))
+		c.JSON(400, ErrorResponse(err))
 		return
 	}
 
@@ -97,7 +113,7 @@ func ResultHandler(c *gin.Context) {
 	if !ok {
 		err := errors.New("claims 类型错误")
 		zap.L().Error("ResultHandler: claims 类型异常", zap.Error(err))
-		c.JSON(200, ErrorResponse(err))
+		c.JSON(400, ErrorResponse(err))
 		return
 	}
 	res := userChe.Result(claims.UserID, ctx)

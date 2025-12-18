@@ -160,7 +160,7 @@ func (s *SetResult) SetUserResult(ctx context.Context) serializer.Response {
 	if slot == nil {
 		co = code.Error
 		zap.L().Info("logic/admin.go SetUserResult not exists slot")
-		log.Println("没找的slot")
+		log.Println("没找到slot")
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),

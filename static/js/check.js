@@ -93,8 +93,6 @@ async function fetchAndRenderSchedule() {
         }
 
         const data = await response.json();
-
-        // ✅ 关键修复：检查业务状态码是否为 200
         if (data.status !== 200) {
             renderError(data.msg || '服务返回错误');
             return;

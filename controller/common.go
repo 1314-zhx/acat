@@ -6,6 +6,7 @@ import (
 )
 
 // ErrorResponse 封装错误返回，先判断是不是标志数据库的Json格式不正确错误。如果不是默认为参数异常
+// 不对外暴露业务码，而是统一返回400
 func ErrorResponse(err error) serializer.Response {
 	if _, ok := err.(*json.UnmarshalTypeError); ok {
 		return serializer.Response{

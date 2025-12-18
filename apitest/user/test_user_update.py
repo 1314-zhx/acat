@@ -28,7 +28,8 @@ def update(session,name,direction,slot_id,is_delete):
 def auth_session():
     s = requests.Session()
     user_login(s)
-    return s
+    yield s
+    s.close()
 
 # 正向测试更新
 def test_user_update_success(auth_session):

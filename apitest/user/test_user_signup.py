@@ -27,7 +27,8 @@ def signup_interview(session,name,direction,slot_id):
 def auth_session():
     s = requests.Session()
     user_login(s)
-    return s
+    yield s
+    s.close()
 
 # 正向测试
 def test_signup_interview_success(auth_session):

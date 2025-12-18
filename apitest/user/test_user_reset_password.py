@@ -29,6 +29,7 @@ def get_code():
     code = json_data.get("data", {})
     assert code is not None, "响应中未包含验证码（请确认后端在 test_mode 下返回 code）"
     print(code)
+    s.close()
     return  code
 
 

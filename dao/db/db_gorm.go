@@ -23,7 +23,7 @@ func InitDB() error {
 			setting.Conf.MySQLPwd,
 			setting.Conf.MySQLHost,
 			setting.Conf.MySQLPort,
-			setting.Conf.MySQLDbNameTest) // 在测试时连接测试数据库
+			setting.Conf.MySQLDbName) // 在测试时连接测试数据库
 
 		DB, err = gorm.Open(mysql.Open(dsn))
 		if err != nil {

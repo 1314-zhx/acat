@@ -55,6 +55,18 @@ func (dao *UserDao) NotExistsUserByPhone(phone string) bool {
 	}
 	return count == 0
 }
+func (dao *UserDao) NotExistsUserByEmail(email string) bool {
+	var count int64
+	err := dao.db.Model(&model.UserModel{}).
+		Where("email = ?", email).
+		Count(&count).Error
+	if err != nil {
+		zap.L().Error("dao/user.go NotExistsUserByEmail failed", zap.Error(err))
+		log.Printf("检查邮箱是否存在失败: %v", err)
+		return false
+	}
+	return count == 0
+}
 func (dao *UserDao) GetUserByID(id uint, ctx context.Context) (*model.UserModel, error) {
 	var user model.UserModel
 	err := dao.db.WithContext(ctx).Select("id", "name", "password", "phone", "first_pass").
@@ -408,4 +420,17 @@ func (dao *UserDao) GetUsersByRound(round int) ([]model.UserResponse, error) {
 		usersRes = append(usersRes, userRes)
 	}
 	return usersRes, nil
+}
+func (dao *UserDao) UserOnlyOneSlot(uid uint) error {
+	var count int64
+	err := dao.db.Model(&model.InterviewAssignment{}).
+		Where("user_id = ?", uid).
+		Count(&count).Error
+	if err != nil {
+		return fmt.Errorf("查询用户面试关系表失败")
+	}
+	if count > 0 {
+		return errors.New("用户已有其它面试")
+	}
+	return nil
 }
