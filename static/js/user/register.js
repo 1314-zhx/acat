@@ -37,7 +37,8 @@ async function sendRegisterCode(data) {
             document.getElementById('code')?.focus();
             return true;
         } else {
-            showToast(result.msg || '发送失败', false);
+            const errorMsg = result?.error  || result?.msg || JSON.stringify(result).slice(0, 100) || '发送失败';
+            showToast(errorMsg, false);
             return false;
         }
     } catch (err) {
@@ -94,7 +95,8 @@ async function completeRegister(data) {
                 setTimeout(() => window.location.href = '/login.html', 2000);
             }
         } else {
-            showToast(result.msg || '注册失败', false);
+            const errorMsg = result?.error || result?.msg || JSON.stringify(result).slice(0, 100) || '注册失败';
+            showToast(errorMsg, false);
         }
     } catch (err) {
         console.error('注册请求失败:', err);

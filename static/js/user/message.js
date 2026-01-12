@@ -110,7 +110,7 @@ document.getElementById('messageForm').addEventListener('submit', async (e) => {
             })
         });
 
-        // 🔍 防御性检查：确保返回的是 JSON
+        // 防御性检查：确保返回的是 JSON
         const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
             const text = await response.text();

@@ -141,9 +141,9 @@ document.getElementById('submitBooking').addEventListener('click', async () => {
         });
 
         const data = await response.json();
-        let errorMsg = data.msg || '报名失败，请稍后重试';
+        let errorMsg = data.error || data.msg;
 
-        if (response.ok && data.status === 200 && data.msg === 'Success') {
+        if (response.ok && data.status === 200 && data.msg === '成功') {
             showMessage(msgEl, '报名成功！请留意通知。', true);
             setTimeout(() => {
                 document.getElementById('bookingModal').style.display = 'none';
@@ -156,12 +156,16 @@ document.getElementById('submitBooking').addEventListener('click', async () => {
                 errorMsg = '该时段名额已满，请选择其他时间。';
             } else if (errorMsg.includes('重复') || errorMsg.includes('已报名')) {
                 errorMsg = '您已报名过该时段。';
+            } else if (errorMsg.includes("一面未通过")){
+                errorMsg = "一面未通过，无法参加二面"
+            } else if (errorMsg.includes("已有其它面试")){
+                errorMsg = "用户已有其它面试"
             }
             showMessage(msgEl, errorMsg, false);
         }
     } catch (err) {
-        console.error('网络错误:', err);
-        showMessage(msgEl, '网络错误，请检查后重试。', false);
+        console.error('报名错误:', err);
+        showMessage(msgEl, '报名错误，请检查后重试。', false);
     } finally {
         btn.disabled = false;
         btn.textContent = '确认报名';

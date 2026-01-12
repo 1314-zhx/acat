@@ -11,10 +11,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func AdminLoginHandler(c *gin.Context) {

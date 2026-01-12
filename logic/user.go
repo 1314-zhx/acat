@@ -14,15 +14,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/redis/go-redis/v9"
-	"go.uber.org/zap"
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 //---------------->用户登录<-------------------//
@@ -146,8 +147,8 @@ func (r *UserRes) SendRegisterCode() serializer.Response {
 	// 唯一性校验，每个用户对应一个邮箱，后续的改密码改手机号等操作由邮箱发送验证码
 	if !userDao.NotExistsUserByPhone(r.Phone) {
 		co = code.Error
-		zap.L().Info("logic/user.go SendRegisterCode() failed exists user  error : ", zap.Error(errors.New(code.GetMsg(co))))
-		log.Println("logic/user.go SendRegisterCode() failed exists user error : ", errors.New(code.GetMsg(co)))
+		zap.L().Info("logic/user.go SendRegisterCode() failed email exists user  error : ", zap.Error(errors.New(code.GetMsg(co))))
+		log.Println("logic/user.go SendRegisterCode() failed email exists user error : ", errors.New(code.GetMsg(co)))
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),
@@ -156,8 +157,8 @@ func (r *UserRes) SendRegisterCode() serializer.Response {
 	}
 	if !userDao.NotExistsUserByEmail(r.Email) {
 		co = code.Error
-		zap.L().Info("logic/user.go SendRegisterCode() failed exists user  error : ", zap.Error(errors.New(code.GetMsg(co))))
-		log.Println("logic/user.go SendRegisterCode() failed exists user error : ", errors.New(code.GetMsg(co)))
+		zap.L().Info("logic/user.go SendRegisterCode() failed phone exists user  error : ", zap.Error(errors.New(code.GetMsg(co))))
+		log.Println("logic/user.go SendRegisterCode() failed phone exists user error : ", errors.New(code.GetMsg(co)))
 		return serializer.Response{
 			Status: co,
 			Msg:    code.GetMsg(co),
@@ -344,7 +345,7 @@ func (ch *UserChe) Result(uid uint, ctx context.Context) serializer.Response {
 	co := code.Success
 	if ch.Round > 2 || ch.Round < 1 {
 		co = code.InvalidParam
-		zap.L().Warn("logic/user.go Result failed error : ", zap.Error(errors.New("无效参数")))
+		zap.L().Info("logic/user.go Result failed error : ", zap.Error(errors.New("无效参数")))
 		log.Println("logic/user.go Result failed error : ", "无效参数")
 		return serializer.Response{
 			Status: co,
@@ -450,8 +451,13 @@ func (p *UserPost) Post(uid uint, ctx context.Context) serializer.Response {
 	err = userDaoWithRdb.Post(p.SlotId, user.ID, ctx)
 	if err != nil {
 		co = code.Error
-		zap.L().Info("logic/user.go failed post error : ", zap.Error(err))
+		zap.L().Error("logic/user.go failed post error : ", zap.Error(err))
 		log.Println("logic/user.go failed post error : ", err)
+		return serializer.Response{
+			Status: co,
+			Msg:    code.GetMsg(co),
+			Error:  err.Error(),
+		}
 	}
 	return serializer.Response{
 		Status: co,
@@ -487,7 +493,7 @@ func (l *Letter) Letter(uid uint) serializer.Response {
 	letterDao := dao.NewLetterDao(db.DB)
 	err := letterDao.Letter(l.Title, l.Content, l.ReceiveID, uid)
 	if err != nil {
-		zap.L().Info("logic/letter.go failed dao error : ", zap.Error(err))
+		zap.L().Error("logic/letter.go failed dao error : ", zap.Error(err))
 		log.Println("logic/letter.go failed dao error : ", err)
 		co = code.Error
 		return serializer.Response{
@@ -564,7 +570,7 @@ func (u *UserUpdate) Update(uid uint) serializer.Response {
 		err := userDao.Delete(uid)
 		if err != nil {
 			co = code.Error
-			zap.L().Info("logic/user.go Update failed error : ", zap.Error(err))
+			zap.L().Error("logic/user.go Update failed error : ", zap.Error(err))
 			log.Println("logic/user.go Update failed error : ", err)
 			return serializer.Response{
 				Status: co,
@@ -577,12 +583,11 @@ func (u *UserUpdate) Update(uid uint) serializer.Response {
 			Msg:    code.GetMsg(co),
 		}
 	} else if u.IsDelete == 0 {
-		fmt.Println("111")
 		userDao := dao.NewUserDao(db.DB)
 		err := userDao.Update(uid, u.SlotId, u.Name, u.Direction)
 		if err != nil {
 			co = code.Error
-			zap.L().Info("logic/user.go Update failed error : ", zap.Error(err))
+			zap.L().Error("logic/user.go Update failed error : ", zap.Error(err))
 			log.Println("logic/user.go Update failed error : ", err)
 			return serializer.Response{
 				Status: co,
@@ -609,6 +614,7 @@ func ShowSlot(uid uint) serializer.Response {
 	userDao := dao.NewUserDao(db.DB)
 	slotId, err = userDao.GetUserCurrentValidSlotID(uid)
 	if err != nil {
+		zap.L().Error("logic/user.go ShowSlot failed error : ", zap.Error(err))
 		co = code.Error
 		return serializer.Response{
 			Status: co,
@@ -633,7 +639,6 @@ func ShowSlot(uid uint) serializer.Response {
 			Error:  err.Error(),
 		}
 	}
-	fmt.Println("logic : ", slot)
 	return serializer.Response{
 		Status: co,
 		Data:   slot,
@@ -710,7 +715,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	// 1. 参数校验
 	fmt.Println(r)
 	if r.Account == "" || r.Code == "" || r.NewPassword == "" {
-		zap.L().Warn("logic.user.go ResetPassword failed", zap.Error(errors.New("缺少必要参数")))
+		zap.L().Info("logic.user.go ResetPassword failed", zap.Error(errors.New("缺少必要参数")))
 		log.Println("logic.user.go ResetPassword failed ", "缺少必要参数")
 		return serializer.Response{
 			Status: code.InvalidParam,
@@ -723,7 +728,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	if util.IsEmail(r.Account) {
 		key = "verify:email:" + r.Account
 	} else {
-		zap.L().Warn("logic.user.go ResetPassword failed", zap.Error(errors.New("无效账号格式")))
+		zap.L().Info("logic.user.go ResetPassword failed", zap.Error(errors.New("无效账号格式")))
 		log.Println("logic.user.go ResetPassword failed ", "无效账号格式")
 		return serializer.Response{
 			Status: code.InvalidParam,
@@ -736,7 +741,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	fmt.Println("storedCode", storedCode)
 	if err != nil {
 		if err == redis.Nil {
-			zap.L().Warn("logic.user.go ResetPassword failed", zap.Error(errors.New("无效验证码")))
+			zap.L().Info("logic.user.go ResetPassword failed", zap.Error(errors.New("无效验证码")))
 			log.Println("logic.user.go ResetPassword failed ", "无效验证码")
 			return serializer.Response{
 				Status: code.Error,
@@ -755,7 +760,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	}
 	// 4. 验证码比对
 	if storedCode != r.Code {
-		zap.L().Warn("logic.user.go ResetPassword failed", zap.Error(errors.New("验证码不匹配")))
+		zap.L().Info("logic.user.go ResetPassword failed", zap.Error(errors.New("验证码不匹配")))
 		log.Println("logic.user.go ResetPassword failed ", "验证码不匹配")
 		return serializer.Response{
 			Status: code.Error,
@@ -781,7 +786,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	}
 	if user == nil {
 		co = code.Error
-		zap.L().Warn("logic.user.go ResetPassword failed", zap.Error(errors.New("未找到该用户")))
+		zap.L().Info("logic.user.go ResetPassword failed", zap.Error(errors.New("未找到该用户")))
 		log.Println("logic.user.go ResetPassword failed ", "未找到该用户")
 		return serializer.Response{
 			Status: co,
@@ -793,7 +798,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	// 6. 加密新密码
 	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(r.NewPassword), bcrypt.DefaultCost)
 	if err != nil {
-		zap.L().Warn("logic.user.go ResetPassword failed", zap.Error(errors.New("加密错误")))
+		zap.L().Error("logic.user.go ResetPassword failed", zap.Error(errors.New("加密错误")))
 		log.Println("logic.user.go ResetPassword failed ", "加密错误")
 		return serializer.Response{
 			Status: code.Error,
@@ -806,7 +811,7 @@ func (r *ResetPassword) ResetPassword(ctx context.Context) serializer.Response {
 	err = userDao.ResetPassword(ctx, user.ID, string(hashedPwd))
 	if err != nil {
 		co = code.Error
-		zap.L().Warn("logic.user.go ResetPassword failed", zap.Error(errors.New("重置密码失败")))
+		zap.L().Error("logic.user.go ResetPassword failed", zap.Error(errors.New("重置密码失败")))
 		log.Println("logic.user.go ResetPassword failed ", "重置密码失败")
 		return serializer.Response{
 			Status: co,
@@ -832,7 +837,7 @@ func (c *CheckReply) Reply(uid uint) serializer.Response {
 	letters, err := letterDao.GetLetters(uid)
 	if err != nil {
 		co = code.Error
-		zap.L().Info("logic/user.go Reply get error : ", zap.Error(err))
+		zap.L().Error("logic/user.go Reply get error : ", zap.Error(err))
 		log.Println("logic/user.go Reply get error : ", err)
 		return serializer.Response{
 			Status: co,

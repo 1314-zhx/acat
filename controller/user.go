@@ -13,13 +13,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"net/url"
 	"path/filepath"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func RegisterHandler(c *gin.Context) {
@@ -28,7 +29,7 @@ func RegisterHandler(c *gin.Context) {
 	if err != nil {
 		zap.L().Info("controller/user.go RegisterHandler() failed shouldBindJSON() error : ", zap.Error(err))
 		log.Println("controller/user.go RegisterHandler() failed shouldBindJSON() error : ", err)
-		c.JSON(200, ErrorResponse(err))
+		c.JSON(400, ErrorResponse(err))
 		return
 	}
 	res := userRegister.SendRegisterCode()
@@ -44,7 +45,7 @@ func CompleteRegisterHandler(c *gin.Context) {
 	if err != nil {
 		zap.L().Info("controller/user.go CompleteRegisterHandler() failed shouldBindJSON() error : ", zap.Error(err))
 		log.Println("controller/user.go CompleteRegisterHandler() failed shouldBindJSON() error : ", err)
-		c.JSON(200, ErrorResponse(err))
+		c.JSON(400, ErrorResponse(err))
 		return
 	}
 	res := userRegister.CompleteRegister()
@@ -62,7 +63,7 @@ func LoginHandler(c *gin.Context) {
 	if err != nil {
 		zap.L().Info("controller/user.go LoginHandler() failed shouldBindJSON() error : ", zap.Error(err))
 		log.Println("controller/user.go LoginHandler() failed shouldBindJSON() error : ", err)
-		c.JSON(200, ErrorResponse(err))
+		c.JSON(400, ErrorResponse(err))
 		return
 	}
 
@@ -231,6 +232,7 @@ func UpdateHandler(c *gin.Context) {
 func ShowSlotHandler(c *gin.Context) {
 	rawClaims, exists := c.Get("claims")
 	if !exists {
+		fmt.Println(14)
 		err := errors.New("认证信息缺失")
 		zap.L().Warn("ResultHandler: claims 不存在", zap.Error(err))
 		c.JSON(400, ErrorResponse(err))
@@ -239,16 +241,14 @@ func ShowSlotHandler(c *gin.Context) {
 	// 类型断言
 	claims, ok := rawClaims.(*auth.JwtClaims)
 	if !ok {
+		fmt.Println(13)
 		err := errors.New("claims 类型错误")
 		zap.L().Error("ResultHandler: claims 类型异常", zap.Error(err))
 		c.JSON(400, ErrorResponse(err))
 		return
 	}
 	res := logic.ShowSlot(claims.UserID)
-	if res.Error != "" {
-		c.JSON(400, ErrorResponse(errors.New(res.Error)))
-		return
-	}
+	fmt.Println(1)
 	c.JSON(200, res)
 }
 func ForgetHandler(c *gin.Context) {

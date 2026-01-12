@@ -110,6 +110,10 @@ input, select, button {
     font-weight: bold;
 }
 .success { background: #e6f4ea; color: #2e7d32; }
+.info {
+    color: #666;
+    font-style: italic;
+}
 .error { background: #fce8e6; color: #c62828; }
 .back-link {
     display: inline-block;

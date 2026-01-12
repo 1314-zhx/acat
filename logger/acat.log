@@ -1,8 +1,0 @@
-
-{"level":"INFO","time":"2025-12-15T17:10:55.721+0800","caller":"logic/user.go:280","msg":"logic/user.go failed post error : ","error":"你已预约过面试，请勿重复提交"}
-{"level":"INFO","time":"2025-12-15T17:26:04.827+0800","caller":"logic/user.go:270","msg":"logic/user.go Post UserOnlyOneSlot error : ","error":"用户已有其它面试"}
-{"level":"INFO","time":"2025-12-15T17:28:21.871+0800","caller":"logic/user.go:289","msg":"logic/user.go Post round 1 no pass post 2 error : ","error":"一面未通过，无法参加二面"}
-{"level":"INFO","time":"2025-12-15T17:28:32.583+0800","caller":"logic/user.go:301","msg":"logic/user.go failed post error : ","error":"报名时间已经截止"}
-{"level":"INFO","time":"2025-12-15T17:31:13.964+0800","caller":"logic/user.go:270","msg":"logic/user.go Post UserOnlyOneSlot error : ","error":"用户已有其它面试"}
-{"level":"INFO","time":"2025-12-15T17:31:14.109+0800","caller":"logic/user.go:258","msg":"logic/user.go Post get slot by id error : ","error":"user not found"}
-{"level":"INFO","time":"2025-12-18T11:06:13.395+0800","caller":"logic/user.go:159","msg":"logic/user.go SendRegisterCode() failed exists user  error : ","error":"失败"}

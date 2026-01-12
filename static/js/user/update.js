@@ -21,17 +21,23 @@ async function loadCurrentUserSlot() {
     const container = document.getElementById('currentSlotContainer');
     try {
         const res = await fetch('/user/auth/my_slot');
-        if (!res.ok) {
-            if (res.status === 401) {
-                container.innerHTML = '<p class="error">请先登录</p>';
-            } else {
-                container.innerHTML = '<p class="error">加载失败，请重试</p>';
-            }
+
+        // 情况1: 未登录
+        if (res.status === 401) {
+            container.innerHTML = '<p class="error">请先登录</p>';
             return;
         }
 
+        // 情况2: 其他 HTTP 错误（500、404 等）
+        if (!res.ok) {
+            container.innerHTML = '<p class="error">加载失败，请重试</p>';
+            return;
+        }
+
+        // 情况3: 成功响应，解析 JSON
         const data = await res.json();
 
+        // 成功且有数据 → 显示预约
         if (data.status === 200 && data.data) {
             const slot = data.data;
             currentUserSlotId = slot.id;
@@ -51,8 +57,10 @@ async function loadCurrentUserSlot() {
                     </div>
                 </div>
             `;
-        } else {
-            container.innerHTML = '<p class="error">您尚未预约面试</p>';
+        }
+        // 成功但无数据 → 用户确实没预约
+        else {
+            container.innerHTML = '<p class="info">您尚未预约面试</p>'; // 建议用 .info 样式（非 error）
         }
     } catch (err) {
         console.error('加载当前预约失败:', err);
