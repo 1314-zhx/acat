@@ -85,3 +85,8 @@ button:hover:not(:disabled) {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
 }
+h2 span img {
+    width:2.5rem;
+    height:2rem;
+    vertical-align: bottom;
+}

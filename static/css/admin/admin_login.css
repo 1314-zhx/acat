@@ -82,3 +82,9 @@ body {
     min-height: 1.2rem;
     font-size: 0.9rem;
 }
+
+h2 span img {
+    width:2.5rem;
+    height:2rem;
+    vertical-align: bottom;
+}

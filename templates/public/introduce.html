@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="../../static/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../../static/bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css">
   <title>关于ACAT实验室</title>
   <style>
     * {
@@ -36,12 +37,11 @@
       max-width: 520px; /* 稍宽一点，适配大字 */
       text-align: left;
       flex-shrink: 0; /* 防止被压缩 */
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      margin-bottom: 2.5rem;
     }
-
-    .card-right h2 {
-      font-size: 24px; /* 标题更大 */
-      margin-bottom: 24px;
-      font-weight: bold;
+    .card-right {
+      margin-top: 120px;
     }
 
     .card-right p {
@@ -56,10 +56,14 @@
       flex-wrap: wrap;
       margin-top: 20px;
     }
-
+    /* style.css */
+    .card-right > h2 {
+      margin-top: 20px;
+    }
     .btn-go,
     .btn-java,
     .btn-frontend {
+      flex:1;
       padding: 10px 18px;
       border-radius: 6px;
       text-decoration: none;
@@ -113,7 +117,7 @@
   </style>
 </head>
 <body>
-<div class="card-right">
+<div class="card-right" >
   <h2>关于ACAT实验室</h2>
   <p>
     ACAT实验室，全称，计算机应用技术协会，隶属于西安邮电大学计算机学院，成立于2014年。实验室位处西区图书馆二楼A211教室，是一个集学习、交流、项目实战于一体的开放技术社区。
@@ -131,7 +135,7 @@
   </div>
 </div>
 <div class="back-button">
-  <a href="/index">返回首页</a>
+  <a href="/index" class="btn btn-info">返回首页</a>
 </div>
 <!-- 版权信息：始终在页面最下方 -->
 <div class="footer">

@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <title>公布面试结果 - 管理员</title>
-  <link rel="stylesheet" href="/static/css/admin/publish_email.css">
+  <link rel="stylesheet" href="../../static/css/admin/publish_email.css">
+  <link rel="stylesheet" href="../../static/bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css">
 </head>
 <body>
+
 <h2>公布面试结果</h2>
 
 <!-- 初始：只显示这两个按钮 -->
-<div id="round-select">
-  <button class="btn" onclick="fetchUsers(1)">公布第一轮面试结果</button>
-  <button class="btn" onclick="fetchUsers(2)">公布第二轮面试结果</button>
+<div id="round-select" class="btn-group" role="group" aria-label="Basic outlined example">
+  <button class="btn btn-outline-primary" onclick="fetchUsers(1)">公布第一轮面试结果</button>
+  <button class="btn btn-outline-primary" onclick="fetchUsers(2)">公布第二轮面试结果</button>
 </div>
 
 <!-- 用户列表（初始隐藏） -->
@@ -34,6 +36,6 @@
   </div>
 </div>
 
-<script src="/static/js/admin/publish_email.js"></script>
+<script src="../../static/js/admin/publish_email.js"></script>
 </body>
 </html>

@@ -158,9 +158,10 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         showToast('邮箱格式不正确', false);
         return;
     }
-
-    if (data.password.length < 6) {
-        showToast('密码至少6位', false);
+    
+    const reg = /^[a-zA-Z0-9-_]{6,20}$/
+    if (!reg.test(password)) {
+        showToast('请输入6-20位字符', false);
         return;
     }
 

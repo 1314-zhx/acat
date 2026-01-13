@@ -7,12 +7,13 @@ document.getElementById('adminLoginForm').addEventListener('submit', async (e) =
     const loginBtn = document.getElementById('loginBtn');
 
     // 简单校验
-    if (!phone || !/^\d{11}$/.test(phone)) {
+    const reg = /^[a-zA-Z0-9-_]{6,20}$/
+    const num = /^[0-9]{11}$/
+    if (!num.test(phone)) {
         errorMsg.textContent = '请输入有效的11位手机号';
         return;
-    }
-    if (password.length < 6) {
-        errorMsg.textContent = '密码至少6位';
+    }else if (!reg.test(password)) {
+        errorMsg.textContent = '请输入6-20位字符';
         return;
     }
 

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../../static/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../../static/bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css">
     <title>页面未找到</title>
     <style>
         /* 重置 body 默认 margin/padding */
@@ -63,10 +64,13 @@
 </head>
 <body>
 <div class="page">
-    <img src="/static/images/acat-404.png" alt="ACAT 404 Logo" style="width: 200px; height: auto;">
-    <p>抱歉，您访问的页面不存在。</p>
-    <p>请检查网址是否正确，或返回首页继续浏览。</p>
-    <a href="javascript:history.back()">返回上一页</a>
+    <img src="../../static/images/acat-404.png" alt="ACAT 404 Logo" style="width: 200px; height: auto;">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">抱歉，您访问的页面不存在。</h4>
+        <p>请检查网址是否正确，或返回首页继续浏览。</p>
+        <hr>
+        <a href="javascript:history.back()">返回上一页</a>
+    </div>
 </div>
 </body>
 </html>

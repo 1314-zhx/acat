@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>面试时间段设置</title>
-  <link rel="stylesheet" href="/static/css/admin/set_schedule.css">
+  <link rel="stylesheet" href="../../static/css/admin/set_schedule.css">
+  <link rel="stylesheet" href="../../static/bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css">
 </head>
 <body>
 
@@ -34,14 +35,14 @@
   </tr>
 </table>
 
-<div class="button-group">
-  <button id="submitBtn">提交</button>
-  <button id="clearBtn">清空</button>
+<div class="btn-group button-group" aria-label="Basic mixed styles example">
+  <button id="submitBtn" class="btn btn-success">提交</button>
+  <button id="clearBtn" class="btn btn-danger">清空</button>
 </div>
 
 <div id="message"></div>
 
-<h3 style="text-align: center;">当前 JSON 数据：</h3>
+<h3 style="text-align: center;">再次确认：</h3>
 <pre id="jsonOutput">{
   "start_time": "",
   "end_time": "",
@@ -49,6 +50,6 @@
   "max_num": 10
 }</pre>
 
-<script src="/static/js/admin/set_schedule.js"></script>
+<script src="../../static/js/admin/set_schedule.js"></script>
 </body>
 </html>

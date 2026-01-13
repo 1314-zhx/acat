@@ -1,0 +1,2 @@
+{"level":"INFO","time":"2026-01-13T14:38:44.755+0800","caller":"logic/user.go:423","msg":"logic/user.go Post UserOnlyOneSlot error : ","error":"用户已有其它面试"}
+{"level":"ERROR","time":"2026-01-13T14:39:09.950+0800","caller":"logic/user.go:617","msg":"logic/user.go ShowSlot failed error : ","error":"record not found"}

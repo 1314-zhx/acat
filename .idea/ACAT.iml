@@ -16,5 +16,7 @@
     <orderEntry type="module" module-name="gin_mall" />
     <orderEntry type="module" module-name="lottery" />
     <orderEntry type="library" name="Python 3.10 (ACAT) interpreter library" level="application" />
+    <orderEntry type="library" name="bootstrap-icons" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
   </component>
 </module>

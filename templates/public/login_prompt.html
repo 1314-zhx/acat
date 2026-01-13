@@ -3,16 +3,27 @@
 <head>
   <meta charset="utf-8">
   <title>请登录</title>
+  <link rel="stylesheet" href="../../static/bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css">
   <style>
     body { font-family: Arial; text-align: center; margin-top: 100px; }
     .btn { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .container {
+            max-width: 600px;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
   </style>
 </head>
 <body>
-<h2>⚠️ 您尚未登录</h2>
-<p>请先登录才能访问该页面</p>
-<button class="btn" onclick="location.href='/user/login'">
-  前往登录
-</button>
+  <div class="container">
+<div class="alert alert-danger" role="alert">
+  <h4 class="alert-heading">⚠️ 您尚未登录!</h4>
+  <p>请先登录才能访问该页面</p>
+  <hr>
+  <button class="btn" onclick="location.href='/user/login'">
+    前往登录
+  </button>
+</div>
+</div>
 </body>
 </html>
