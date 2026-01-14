@@ -158,11 +158,11 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         showToast('邮箱格式不正确', false);
         return;
     }
-    
-    const reg = /^[a-zA-Z0-9-_]{6,20}$/
-    if (!reg.test(password)) {
-        showToast('请输入6-20位字符', false);
-        return;
+
+    const reg = /^[a-zA-Z0-9_-]{6,20}$/;
+    if (!reg.test(data.passward)) {
+        showToast('密码必须为6-20位，仅包含字母、数字、下划线(_)或连字符(-)1', false);
+        return false;
     }
 
     // 判断阶段

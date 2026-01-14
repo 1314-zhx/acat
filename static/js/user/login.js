@@ -29,13 +29,13 @@ async function login() {
     const phone = phoneInput.value.trim();
     const password = passwordInput.value;
 
-    const reg = /^[a-zA-Z0-9-_]{6,20}$/
+    const reg = /^[a-zA-Z0-9_-]{6,20}$/
     const num = /^[0-9]{11}$/
     if (!num.test(phone)) {
        showToast('请输入11位手机号', false);
         return;
     }else if (!reg.test(password)) {
-        showToast('请输入6-20位字符', false);
+        showToast('请输入6-20位字符11', false);
         return;
     }
 
